@@ -1,0 +1,98 @@
+# PIPELINE CONFIGURATION
+parameters:
+  # Artifact feed to pull custom packages from.
+  - name: pypiAzureArtifactFeed
+    type: string
+
+  - name: scriptsRepo
+    type: string
+    default: git@github.com:illuscio-dev/azure-pipelines-scripts.git
+
+  - name: pythonVersion
+    type: string
+    default: '3.8'
+
+  - name: goVersionLinkLinux
+    type: string
+    default: https://dl.google.com/go/go1.13.6.linux-amd64.tar.gz
+
+  - name: goVersionLinkMac
+    type: string
+    default: https://dl.google.com/go/go1.13.6.darwin-amd64.pkg
+
+  - name: goVersionLinkWindows
+    type: string
+    default: https://dl.google.com/go/go1.13.6.windows-amd64.zip
+
+  - name: minimumCoverage
+    type: number
+    default: 0.85
+
+  - name: testWindows
+    type: boolean
+    default: true
+
+  - name: testMac
+    type: boolean
+    default: true
+
+  # Whether to build and publish docs.
+  - name: publishDocs
+    type: boolean
+    default: true
+
+jobs:
+
+- job: 'Test_Lint_Build'
+  timeoutInMinutes: 5
+  cancelTimeoutInMinutes: 2
+
+  pool:
+    vmImage: 'ubuntu-16.04'
+
+  steps:
+    # Setup git environment
+    - template: git_setup.yml
+
+    # Download python helper scripts
+    - template: scripts_download.yml
+
+    # Setup python environment
+    - template: python_setup.yml
+      parameters:
+        pythonVersion: ${{ parameters.pythonVersion }}
+        pypiAzureArtifactFeed: ${{ parameters.pypiAzureArtifactFeed }}
+
+    # Setup go environment
+    - template: go_setup.yml
+      parameters:
+        goVersionLink: ${{ parameters.goVersionLinkLinux }}
+
+    # Get Repo Name
+    - script: python3 $(BUILD_SCRIPTS_DIR)/get_repo_name.py
+      displayName: 'Get repo name'
+
+    # Run job
+    - script: revive -config revive.toml ./...
+      displayName: 'Lint'
+
+    # Release the module on github.
+    - template: go_run_tests.yml
+      parameters:
+        minimumCoverage: ${{ parameters.minimumCoverage }}
+
+    # Get the release version
+    - script: python3 $(BUILD_SCRIPTS_DIR)/get_release_version.py
+      displayName: 'get release version'
+      env:
+        PublishLanguage: "GO"
+      condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/dev'))
+
+    # Generate docs.
+    - template: go_module_docs.yml
+      parameters:
+        publishDocs: ${{ parameters.publishDocs }}
+
+    # Merge build to master and tag as release version (this is how go modules are
+    # published).
+    - template: git_update_master_version.yml

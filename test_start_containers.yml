@@ -1,0 +1,43 @@
+parameters:
+  - name: testMongo
+    type: boolean
+
+  - name: testRabbit
+    type: boolean
+
+  - name: testRedis
+    type: boolean
+
+# If we need to run our tests against mongodb, rabbitmq, etc, what better way than to
+# spin up an Actual service? This isn't technically kosher for unit tests, but for
+# something designed specifically to interact with these services, it gives a greater
+# level of confidence that the functions are working with the actual target service.
+
+steps:
+
+# RABBIT MQ
+- script: docker pull 'mongo'
+  displayName: 'downloading mongodb docker'
+  condition: and(succeeded(), eq('${{ parameters.testMongo }}', true))
+
+- script: docker run -d --name mongotest -p 127.0.0.1:57017:27017/tcp mongo
+  displayName: 'start test mongo server'
+  condition: and(succeeded(), eq('${{ parameters.testMongo }}', true))
+
+# MONGO DB
+- script: docker pull 'rabbitmq:3.8-management'
+  displayName: 'downloading rabbitMQ docker'
+  condition: and(succeeded(), eq('${{ parameters.testRabbit }}', true))
+
+- script: docker run -d --name rabbittest -p 127.0.0.1:57018:5672/tcp rabbitmq:3.8-management
+  displayName: 'start test rabbitMQ server'
+  condition: and(succeeded(), eq('${{ parameters.testRabbit }}', true))
+
+# REEDIS
+- script: docker pull redis
+  displayName: 'downloading rabbitMQ docker'
+  condition: and(succeeded(), eq('${{ parameters.testRabbit }}', true))
+
+- script: docker run -d --name redis-test -p 127.0.0.1:6359:6379/tcp redis
+  displayName: 'start test rabbitMQ server'
+  condition: and(succeeded(), eq('${{ parameters.testRabbit }}', true))

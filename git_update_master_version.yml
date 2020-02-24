@@ -1,0 +1,36 @@
+steps:
+
+# Create a temp branch to commit our changes to.
+- script: |
+    git checkout -b tempBuildBranch
+    git add -A .
+    git commit -am "release build for $(RELEASE_VERSION)."
+  displayName: 'Commit changes to temp branch & add build files.'
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/dev' ))
+
+# Merge into master, resolving conflicts by favoring our temp branch.
+- script: git merge -s recursive -Xours origin/master
+  displayName: 'Force merge ours'
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/dev' ))
+
+# Pull and merge into the latest version of master.
+- script: |
+    git checkout master
+    git pull
+    git merge tempBuildBranch
+  displayName: 'Merge into master.'
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/dev' ))
+
+# Push our new master branch.
+- script: |
+    git push
+  displayName: 'Push master'
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/dev' ))
+
+# Tag with the release version as well as 'latest' and push the tag.
+- script: |
+    git tag -a v$(RELEASE_VERSION) -m "azure pipelines build $(Build.BuildNumber)"
+    git tag -a latest -m "azure pipelines build $(Build.BuildNumber)"
+    git push --tags
+  displayName: 'Publish tagged version.'
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/dev' ))

@@ -1,0 +1,46 @@
+steps:
+
+# Set service name as build variable.
+- script: $(python3 $(BUILD_SCRIPTS_DIR)/python_export_service_name.py)
+  displayName: Get Service Name
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/dev'))
+
+- script: docker -v
+  displayName: Printing docker version info
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/dev'))
+
+# Log in to docker.
+- script: docker login $REGISTRY_URL -u $DOCKER_ID -p $DOCKER_PASSWORD
+  env:
+    DOCKER_ID: $(CONTAINER_REGISTRY_ID)
+    DOCKER_PASSWORD: $(CONTAINER_REGISTRY_PASSWORD)
+    REGISTRY_URL: $(CONTAINER_REGISTRY_URL)
+  displayName: "Logging into DockerHub"
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/dev'))
+
+# Build docker image, tag as latest and version.
+- script: |
+    docker build \
+    --no-cache \
+    --build-arg PIP_INDEX_URL=$PIP_INDEX_URL \
+    --build-arg PIP_EXTRA_INDEX_URL=$PIP_EXTRA_INDEX_URL \
+    -t $REGISTRY_URL/$SERVICE_NAME:$RELEASE_VERSION \
+    -t $REGISTRY_URL/$SERVICE_NAME:latest .
+  env:
+    RELEASE_VERSION: $(RELEASE_VERSION)
+    REGISTRY_URL: $(CONTAINER_REGISTRY_URL)
+    PIP_INDEX_URL: $(PIP_INDEX_URL)
+    PIP_EXTRA_INDEX_URL: $(PIP_EXTRA_INDEX_URL)
+    DOCKER_BUILDKIT: 1
+  displayName: 'Building Docker Image'
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/dev'))
+
+# Push docker image.
+- script: docker push $REGISTRY_URL/$SERVICE_NAME
+  displayName: 'Upload Image'
+  env:
+    REGISTRY_URL: $(CONTAINER_REGISTRY_URL)
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/dev'))
+
+# Merge build to master and tag as release version.
+- template: git_update_master_version.yml

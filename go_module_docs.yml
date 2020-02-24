@@ -1,0 +1,33 @@
+parameters:
+
+  # Whether to build and publish docs.
+  - name: publishDocs
+    type: boolean
+
+steps:
+
+  # Build API documentation. We just need to build the source static html files here
+  # and sphinx can use them.
+  - script: docmodule-go
+    displayName: 'Build docs'
+    condition: |
+      and(
+        succeeded(),
+        ${{ parameters.publishDocs }},
+        eq(variables['Build.SourceBranch'], 'refs/heads/dev')
+      )
+
+  # Build Documentation With Sphinx
+  - script: python setup.py build_sphinx -E
+    displayName: 'Build Docs'
+    condition: |
+      and(
+        succeeded(),
+        ${{ parameters.publishDocs }},
+        eq(variables['Build.SourceBranch'], 'refs/heads/dev')
+      )
+
+  # Release docs on aws.
+  - template: docs_publish_to_s3.yml
+    parameters:
+      publishDocs: ${{ parameters.publishDocs }}

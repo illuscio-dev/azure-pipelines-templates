@@ -1,0 +1,92 @@
+parameters:
+  # Python Version to Use for Build
+  - name: pythonVersion
+    type: string
+    default: 3.8
+
+  # Artifact feed to pull custom packages from.
+  - name: pypiAzureArtifactFeed
+    type: string
+
+  # Minimum Coverage Percentage to Pass Tests.
+  - name: minimumCoverage
+    type: number
+    default: 0.85
+
+  # Whether to start a mongo test container.
+  - name: testMongo
+    type: boolean
+    default: false
+
+  # Whether to start a Rabbit test container.
+  - name: testRabbit
+    type: boolean
+    default: false
+
+  # Whether to start a Redis test container.
+  - name: testRedis
+    type: boolean
+    default: false
+
+  # Whether to build and publish docs.
+  - name: publishDocs
+    type: boolean
+    default: true
+
+jobs:
+
+- job: 'Lint_Test_Publish'
+  timeoutInMinutes: 5
+  cancelTimeoutInMinutes: 2
+
+  pool:
+    vmImage: 'ubuntu-16.04'
+
+  steps:
+    # Setup git environment
+    - template: git_setup.yml
+
+    # Download python helper scripts
+    - template: scripts_download.yml
+
+    # Setup python environment
+    - template: python_setup.yml
+      parameters:
+        pythonVersion: ${{ parameters.pythonVersion }}
+        pypiAzureArtifactFeed: ${{ parameters.pypiAzureArtifactFeed }}
+
+    # Get Repo Name
+    - script: python3 $(BUILD_SCRIPTS_DIR)/get_repo_name.py
+      displayName: 'Get repo name'
+
+    # Run Lint
+    - template: python_lint.yml
+
+    # Run Tests
+    - template: python_test.yml
+      parameters:
+        minimumCoverage: ${{ parameters.minimumCoverage }}
+        testMongo: ${{parameters.testMongo}}
+        testRabbit: ${{parameters.testRabbit}}
+        testRedis: ${{parameters.testRedis}}
+
+    # Get the release version
+    - script: python3 $(BUILD_SCRIPTS_DIR)/get_release_version.py
+      displayName: 'get release version'
+      env:
+        PublishLanguage: "PYTHON"
+      condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/dev'))
+
+    - script: |
+        echo 'Version: $(RELEASE_VERSION)'
+      displayName: 'print version'
+
+    # Publish Docs
+    - template: python_publish_docs.yml
+      parameters:
+        publishDocs: ${{ parameters.publishDocs }}
+
+    # Publish package to pypi and master
+    - template: python_publish_package.yml
+      parameters:
+        pypiAzureArtifactFeed: ${{ parameters.pypiAzureArtifactFeed }}

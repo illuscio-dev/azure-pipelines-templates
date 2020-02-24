@@ -1,0 +1,13 @@
+steps:
+
+- script: |
+    flake8
+  displayName: 'lint (flake8)'
+
+- script: |
+    black . --check
+  displayName: 'lint (black)'
+
+- script: |
+    mypy .
+  displayName: 'type checking (mypy)'

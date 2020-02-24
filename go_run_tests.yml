@@ -1,0 +1,29 @@
+parameters:
+  - name: minimumCoverage
+    type: number
+
+steps:
+- script: |
+    mkdir ./reports
+    set -o pipefail
+    go test \
+    -v \
+    -covermode=count \
+    -coverpkg=./... \
+    -coverprofile=coverage.out \
+    ./... \
+    -minimum-coverage=${{ parameters.minimumCoverage }} \
+    2>&1 \
+    | tee ./reports/testResults.txt
+  displayName: 'Run Tests'
+
+- script: cat ./reports/testResults.txt | go-junit-report > ./reports/tests_junit.xml
+  condition: succeededOrFailed()
+  displayName: 'Convert test report to junit'
+
+- task: PublishTestResults@2
+  condition: succeededOrFailed()
+  inputs:
+    testRunner: JUnit
+    testResultsFiles: reports/tests_junit.xml
+    failTaskOnFailedTests: true

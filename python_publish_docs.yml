@@ -1,0 +1,23 @@
+parameters:
+
+  # Whether to build and publish docs.
+  - name: publishDocs
+    type: boolean
+
+
+steps:
+
+  # Build Documentation With Sphinx
+  - script: python setup.py build_sphinx -E
+    displayName: 'Build Docs'
+    condition: |
+      and(
+        succeeded(),
+        ${{ parameters.publishDocs }},
+        eq(variables['Build.SourceBranch'], 'refs/heads/dev')
+      )
+
+  # Download python helper scripts
+  - template: docs_publish_to_s3.yml
+    parameters:
+      publishDocs: ${{ parameters.publishDocs }}

@@ -1,0 +1,28 @@
+parameters:
+  # Artifact feed to pull custom packages from.
+  - name: pypiAzureArtifactFeed
+    type: string
+
+steps:
+
+# Set up twine
+- task: TwineAuthenticate@1
+  displayName: 'Authenticate Twine'
+  inputs:
+    # In this case, name of the feed is 'myTestFeed'
+    artifactFeed: ${{ parameters.pypiAzureArtifactFeed }}
+
+# Release the package on our pypi
+- script: python3 setup.py sdist bdist_wheel
+  displayName: 'Build package'
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/dev'))
+
+- script: |
+    twine upload \
+    -r ${{ parameters.pypiAzureArtifactFeed }} \
+    --config-file $(PYPIRC_PATH) \
+    dist/*
+  displayName: 'Upload package'
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/dev'))
+
+- template: git_update_master_version.yml

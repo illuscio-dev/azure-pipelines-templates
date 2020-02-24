@@ -1,0 +1,17 @@
+steps:
+
+# Install SSH key
+# Install an SSH key prior to a build or deployment
+- task: InstallSSHKey@0
+  inputs:
+    knownHostsEntry: $(GIT_KNOWN_HOSTS_ENTRY)
+    sshPublicKey: $(GIT_SSH_PUBLIC_KEY)
+    sshPassphrase: $(GIT_SSH_PASSPHRASE)
+    sshKeySecureFile: git_ssh_key.private
+
+# Use SSH in place of http requests with CI/CD user
+- script: |
+    git config --global --add url."ssh://git@github.com/".insteadOf "https://github.com/"
+    git config --global user.email "$(GIT_EMAIL)"
+    git config --global user.name "$(GIT_USERNAME)"
+  displayName: 'Setting up git config.'

@@ -1,0 +1,10 @@
+steps:
+
+  # Clones build python scripts into a "build_scripts" folder in the temp directory.
+  - script: git clone $(BUILD_SCRIPTS_REPO) build_scripts
+    displayName: 'Download python build scripts.'
+    workingDirectory: $(Agent.TempDirectory)
+
+  - script: chmod 755 -R ./build_scripts
+    displayName: 'Set python build scripts permissions.'
+    workingDirectory: $(Agent.TempDirectory)

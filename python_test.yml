@@ -1,0 +1,38 @@
+parameters:
+  - name: minimumCoverage
+    type: number
+
+  - name: testMongo
+    type: boolean
+
+  - name: testRabbit
+    type: boolean
+
+  - name: testRedis
+    type: boolean
+
+steps:
+
+  - template: test_start_containers.yml
+    parameters:
+      testMongo: ${{parameters.testMongo}}
+      testRabbit: ${{parameters.testRabbit}}
+      testRedis: ${{parameters.testRedis}}
+
+  - script: |
+      pytest --doctest-modules --junitxml=junit/test-results.xml
+    displayName: 'pytest'
+
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFiles: '**/test-results.xml'
+      testRunTitle: 'Python $(python.version)'
+    condition: succeededOrFailed()
+
+  - task: PythonScript@0
+    displayName: 'check coverage'
+    inputs:
+      scriptSource: filePath
+      scriptPath: '$(BUILD_SCRIPTS_DIR)/python_check_coverage.py'
+      arguments: '--minimum ${{ parameters.minimumCoverage }}'
+      failOnStderr: true
