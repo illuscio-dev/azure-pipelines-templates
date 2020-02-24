@@ -13,7 +13,7 @@ steps:
   # Build API documentation. We just need to build the source static html files here
   # and sphinx can use them.
   - script: docmodule-go
-    displayName: 'Build docs'
+    displayName: 'Generate static API docs'
     condition: |
       and(
         succeeded(),
@@ -23,7 +23,7 @@ steps:
 
   # Build Documentation With Sphinx
   - script: python setup.py build_sphinx -E
-    displayName: 'Build Docs'
+    displayName: 'Build docs'
     condition: |
       and(
         succeeded(),
@@ -34,7 +34,7 @@ steps:
   - script: |
       mkdir
       cp -R ./zdocs/build/html ./docs
-    displayName: 'Publishing Docs to /docs'
+    displayName: 'Publishing docs to /docs'
     condition: |
       and(
         succeeded(),
