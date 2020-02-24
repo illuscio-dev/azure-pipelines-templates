@@ -30,7 +30,7 @@ steps:
     inputs:
       # Provide list of feed names which you want to authenticate
       artifactFeeds: ${{ parameters.pypiAzureArtifactFeed }}
-    condition: and(succeeded(), ne(${{ parameters.pypiAzureArtifactFeed }}, -))
+    condition: and(succeeded(), ne(${{ parameters.pypiAzureArtifactFeed }}, "-"))
 
   - script: |
       python -m pip install --upgrade pip
