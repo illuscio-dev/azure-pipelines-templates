@@ -3,7 +3,7 @@ parameters:
   # Artifact feed to pull custom packages from (pass blank if not using).
   - name: pypiAzureArtifactFeed
     type: string
-    default: "-"
+    default:
 
   # Repo containing helper scripts.
   - name: scriptsRepo
