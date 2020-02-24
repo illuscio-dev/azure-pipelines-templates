@@ -1,43 +1,36 @@
 # PIPELINE CONFIGURATION
 parameters:
-  # Artifact feed to pull custom packages from.
+  # Artifact feed to pull custom packages from (pass blank if not using).
   - name: pypiAzureArtifactFeed
     type: string
 
+  # Repo containing helper scripts.
   - name: scriptsRepo
     type: string
     default: git@github.com:illuscio-dev/azure-pipelines-scripts.git
 
+  # Python version to use for python tasks.
   - name: pythonVersion
     type: string
     default: '3.8'
 
+  # Link to go compiler to use.
   - name: goVersionLinkLinux
     type: string
     default: https://dl.google.com/go/go1.13.6.linux-amd64.tar.gz
 
-  - name: goVersionLinkMac
-    type: string
-    default: https://dl.google.com/go/go1.13.6.darwin-amd64.pkg
-
-  - name: goVersionLinkWindows
-    type: string
-    default: https://dl.google.com/go/go1.13.6.windows-amd64.zip
-
+  # Minimum coverage allowed for successful release.
   - name: minimumCoverage
     type: number
     default: 0.85
 
-  - name: testWindows
-    type: boolean
-    default: true
-
-  - name: testMac
-    type: boolean
-    default: true
-
   # Whether to build and publish docs.
   - name: publishDocs
+    type: boolean
+    default: true
+
+  # Whether to publish docs to S3.
+  - name: publishDocsS3
     type: boolean
     default: true
 
@@ -92,6 +85,7 @@ jobs:
     - template: go_module_docs.yml
       parameters:
         publishDocs: ${{ parameters.publishDocs }}
+        publishDocsS3: ${{ parameters.publishDocsS3 }}
 
     # Merge build to master and tag as release version (this is how go modules are
     # published).

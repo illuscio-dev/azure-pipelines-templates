@@ -4,6 +4,10 @@ parameters:
   - name: publishDocs
     type: boolean
 
+  # Whether to publish docs to S3.
+  - name: publishDocsS3
+    type: boolean
+
 steps:
 
   # Build API documentation. We just need to build the source static html files here
@@ -27,7 +31,19 @@ steps:
         eq(variables['Build.SourceBranch'], 'refs/heads/dev')
       )
 
+  - script: |
+      mkdir
+      cp -R ./zdocs/build/html ./docs
+    displayName: 'Publishing Docs to /docs'
+    condition: |
+      and(
+        succeeded(),
+        ${{ parameters.publishDocs }},
+        eq(variables['Build.SourceBranch'], 'refs/heads/dev')
+      )
+
   # Release docs on aws.
   - template: docs_publish_to_s3.yml
     parameters:
       publishDocs: ${{ parameters.publishDocs }}
+      publishDocsS3: ${{ parameters.publishDocsS3 }}

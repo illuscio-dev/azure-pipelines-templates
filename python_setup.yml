@@ -30,9 +30,7 @@ steps:
     inputs:
       # Provide list of feed names which you want to authenticate
       artifactFeeds: ${{ parameters.pypiAzureArtifactFeed }}
-
-  - script: echo $(PIP_INDEX_URL)
-  - script: echo $(PIP_EXTRA_INDEX_URL)
+    condition: and(succeeded(), eq(${{ parameters.pypiAzureArtifactFeed }}, ''))
 
   - script: |
       python -m pip install --upgrade pip

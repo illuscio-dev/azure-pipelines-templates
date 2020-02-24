@@ -4,6 +4,10 @@ parameters:
   - name: publishDocs
     type: boolean
 
+  # Whether to publish docs to S3.
+  - name: publishDocsS3
+    type: boolean
+
 steps:
 
   # Install AWS CLI
@@ -13,6 +17,7 @@ steps:
         and(
           succeeded(),
           ${{ parameters.publishDocs }},
+          ${{ parameters.publishDocsS3 }},
           eq(variables['Build.SourceBranch'], 'refs/heads/dev')
         )
 
@@ -29,6 +34,7 @@ steps:
         and(
           succeeded(),
           ${{ parameters.publishDocs }},
+          ${{ parameters.publishDocsS3 }},
           eq(variables['Build.SourceBranch'], 'refs/heads/dev')
         )
 
@@ -45,6 +51,7 @@ steps:
         and(
           succeeded(),
           ${{ parameters.publishDocs }},
+          ${{ parameters.publishDocsS3 }},
           eq(variables['Build.SourceBranch'], 'refs/heads/dev')
         )
 
@@ -61,5 +68,6 @@ steps:
         and(
           succeeded(),
           ${{ parameters.publishDocs }},
+          ${{ parameters.publishDocsS3 }},
           eq(variables['Build.SourceBranch'], 'refs/heads/dev')
         )

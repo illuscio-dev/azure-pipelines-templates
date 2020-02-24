@@ -33,6 +33,11 @@ parameters:
     type: boolean
     default: true
 
+  # Whether to publish docs to S3.
+  - name: publishDocsS3
+    type: boolean
+    default: true
+
 jobs:
 
 - job: 'Lint_Test_Publish'
@@ -88,6 +93,7 @@ jobs:
     - template: python_publish_docs.yml
       parameters:
         publishDocs: ${{ parameters.publishDocs }}
+        publishDocsS3: ${{ parameters.publishDocsS3 }}
 
     # Publish package to pypi and master
     - template: python_publish_service.yml

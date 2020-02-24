@@ -4,6 +4,10 @@ parameters:
   - name: publishDocs
     type: boolean
 
+  # Whether to build and publish docs.
+  - name: publishDocsS3
+    type: boolean
+
 
 steps:
 
@@ -17,7 +21,13 @@ steps:
         eq(variables['Build.SourceBranch'], 'refs/heads/dev')
       )
 
+  - script: |
+      mkdir
+      cp -R ./zdocs/build/html ./docs
+    displayName: 'Publishing Docs to /docs'
+
   # Download python helper scripts
   - template: docs_publish_to_s3.yml
     parameters:
       publishDocs: ${{ parameters.publishDocs }}
+      publishDocsS3: ${{ parameters.publishDocsS3 }}
