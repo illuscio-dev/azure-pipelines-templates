@@ -5,7 +5,7 @@ parameters:
 
   # Publish to the public pypi.org
   - name: publishToPypiOrg
-    type: bool
+    type: boolean
 
 steps:
 
