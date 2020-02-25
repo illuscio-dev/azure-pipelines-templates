@@ -33,7 +33,7 @@ steps:
   displayName: 'start test rabbitMQ server'
   condition: and(succeeded(), eq('${{ parameters.testRabbit }}', true))
 
-# REEDIS
+# REDIS
 - script: docker pull redis
   displayName: 'downloading redis docker'
   condition: and(succeeded(), eq('${{ parameters.testRedis }}', true))
