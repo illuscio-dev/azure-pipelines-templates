@@ -7,6 +7,12 @@ parameters:
   # Artifact feed to pull custom packages from.
   - name: pypiAzureArtifactFeed
     type: string
+    default: "-"
+
+  # Publish to the public pypi.org
+  - name: publishToPypiOrg
+    type: bool
+    default: false
 
   # Minimum Coverage Percentage to Pass Tests.
   - name: minimumCoverage
@@ -96,4 +102,5 @@ jobs:
     # Publish package to pypi and master
     - template: python_publish_package.yml
       parameters:
+        publishToPypiOrg: ${{ parameters.publishToPypiOrg }}
         pypiAzureArtifactFeed: ${{ parameters.pypiAzureArtifactFeed }}

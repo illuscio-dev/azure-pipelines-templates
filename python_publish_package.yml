@@ -3,26 +3,61 @@ parameters:
   - name: pypiAzureArtifactFeed
     type: string
 
+  # Publish to the public pypi.org
+  - name: publishToPypiOrg
+    type: bool
+
 steps:
 
+# PUBLISH TO AZURE PRIVATE PYPI ###########
 # Set up twine
 - task: TwineAuthenticate@1
   displayName: 'Authenticate Twine'
   inputs:
     # In this case, name of the feed is 'myTestFeed'
     artifactFeed: ${{ parameters.pypiAzureArtifactFeed }}
+  condition: |
+    and(
+      succeeded(),
+      ne('${{ parameters.pypiAzureArtifactFeed }}', '-'),
+      eq(variables['Build.SourceBranch'], 'refs/heads/dev')
+    )
 
 # Release the package on our pypi
 - script: python3 setup.py sdist bdist_wheel
   displayName: 'Build package'
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/dev'))
+  condition: |
+    and(
+      succeeded(),
+      eq(variables['Build.SourceBranch'], 'refs/heads/dev')
+    )
 
 - script: |
     twine upload \
     -r ${{ parameters.pypiAzureArtifactFeed }} \
     --config-file $(PYPIRC_PATH) \
     dist/*
-  displayName: 'Upload package'
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/dev'))
+  displayName: 'Upload package to azure pypi'
+  condition: |
+    and(
+      succeeded(),
+      ne('${{ parameters.pypiAzureArtifactFeed }}', '-'),
+      eq(variables['Build.SourceBranch'], 'refs/heads/dev')
+    )
+
+- script: |
+    twine upload \
+    -r https://test.pypi.org/simple/ \
+    --config-file $(PYPIRC_PATH) \
+    dist/*
+  displayName: 'Upload package to pypi.org'
+  condition: |
+    and(
+      succeeded(),
+      ${{ parameters.publishToPypiOrg }},
+      eq(variables['Build.SourceBranch'], 'refs/heads/dev')
+    )
+
+# PUBLISH TO PUBLIC PYPI ###########
 
 - template: git_update_master_version.yml
