@@ -32,13 +32,22 @@ each lib independently when changes to build process are made.
 
 There are a few other repos related to these templates.
 
-1. [azure-pipelines-scripts]: Helper scripts for some pipeline steps. Can be forked
-    or left as-is if no changes are desired. If forked, the ``BUILD_SCRIPTS_REPO``
-    variable in ``variables.yml`` should be changed to the fork.
-    
-2. [islelib-py]: Template project for python packages with all tooling configs preset.
+- [azure-pipelines-scripts](https://github.com/illuscio-dev/azure-pipelines-scripts): 
+  Helper scripts for some pipeline steps. Can be forked or left as-is if no changes 
+  are desired. If forked, the ``BUILD_SCRIPTS_REPO`` variable in ``variables.yml`` 
+  should be changed to the fork.
 
-3. [islelib-go]: Template project for go module with all tooling configs preset.
+- [islelib-py](https://github.com/illuscio-dev/islelib-py): python package template 
+  with all tooling configs preset.
+
+- [isleservice-py](https://github.com/illuscio-dev/isleservice-py): python service
+  template with  all tooling configs preset.
+  
+- [isleconsumer-py](https://github.com/illuscio-dev/isleservice-py): python consumer 
+  service template with  all tooling configs preset.
+    
+- [islelib-go](https://github.com/illuscio-dev/islelib-go): golang module template with
+  all tooling configs preset.
 
 
 # Repo Yaml Templates
@@ -111,7 +120,8 @@ These templates rely on access to logins or credentials for other services, and 
 them via [pipeline variables]. The following variables are required for these templates
 (depending on the type of build.) They are broken into suggested groups.
 
-- **GIT_CREDENTIALS**
+- **GIT_CREDENTIALS:** Used for adding tags and updating master.
+
     - GIT_SSH_PUBLIC_KEY: Public key for git ssh access.
     - GIT_SSH_PASSPHRASE: Passphrase for ssh key.
     - GIT_KNOWN_HOSTS_ENTRY: Known hosts entry created with public and private keys.
@@ -122,12 +132,19 @@ them via [pipeline variables]. The following variables are required for these te
     For more information on how these values are installed in a pipeline, 
     [see here](https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/utility/install-ssh-key?view=azure-devops).
     
-- **CONTAINER_REGISTRY_CREDENTIALS**
+- **OPEN_SOURCE_TWINE_CREDENTIALS:** Used for uploading public packages to pypi.org
+    
+    - PYPIORG_USER: username for pypi.org
+    - PYPIORG_PASSWORD: password for pypi.org.
+    
+- **CONTAINER_REGISTRY_CREDENTIALS:** Used for uploading service images.
+
     - CONTAINER_REGISTRY_URL: URL for pushing  / pulling from container registry.
     - CONTAINER_REGISTRY_ID: ID to sign into container registry.
     - CONTAINER_REGISTRY_PASSWORD: Password to sign into container registry
     
-- **AWS_DOCS_BUCKET_CREDENTIALS**
+- **AWS_DOCS_BUCKET_CREDENTIALS:** Used for uploading docs to S3 bucket.
+
     - AWS_ACCESS_KEY_ID: Access key id for account to upload docs with.
     - AWS_SECRET_ACCESS_KEY: Secret Access key for account to upload docs with.
     - DOCS_S3_BUCKET: S3 bucket name to upload docs to.
@@ -157,8 +174,11 @@ Secure files``.
 
 # Python Packages Builds
 
-The template library for using this build pipelines can be [found here]. The following 
-tools are used during python package builds:
+The template library for using this build pipelines can be 
+[found here](https://github.com/illuscio-dev/islelib-py). The following tools are used 
+during python package builds:
+
+- **Root Template**: python_package_main.yml
 
 - **Dependency Installation:** Handled via [pip]. 
 
@@ -176,8 +196,11 @@ tools are used during python package builds:
 
 # Go Module Builds
 
-The template library for using this build pipelines can be [found here]. The following 
+The template library for using this build pipelines can be 
+[found here](https://github.com/illuscio-dev/islelib-go). The following 
 tools are used during python package builds:
+
+- **Root Template**: go_module_main.yml
 
 - **Dependency Installation:** Handled via 
     [go get](https://golang.org/pkg/cmd/go/internal/get/). Git is configured to use ssh 
@@ -194,3 +217,27 @@ tools are used during python package builds:
 - **Builds:** Go modules do not need to be built.
 
 - **Package Uploads:** Handled via merge into master and version tag.
+
+
+# Docker Image Builds:
+
+- **Root Template**: docker_image_main.yml
+
+- **Image Builds:** Handled via docker commandline + dockerfile.
+
+- **Image Uploads:** Handled via docker commandline.
+
+
+# Python REST and consumer Service Builds:
+
+The template library for using this build pipelines can be 
+[found here for REST](https://github.com/illuscio-dev/isleservice-py) and 
+[here for Consumer](https://github.com/illuscio-dev/isleconsumer-py) services. The 
+following tools are used during python service builds:
+
+- **Root Template:** python_service_main.yml
+
+- **Dependencies, linting testing, and docs:** are identical to python package builds.
+
+- **Image Builds and Uploads:** Handled via docker commandline + dockerfile.
+
