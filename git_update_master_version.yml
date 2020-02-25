@@ -9,26 +9,15 @@ steps:
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/dev' ))
 
 # Merge into master, resolving conflicts by favoring our temp branch.
-- script: git merge -s -ours origin/master
-  displayName: 'Force merge ours'
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/dev' ))
-
-# Pull and merge into the latest version of master.
 - script: |
-    git checkout master
-    git pull
-    git merge tempBuildBranch
-  displayName: 'Merge into master.'
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/dev' ))
-
-# Push our new master branch.
-- script: |
-    git push
-  displayName: 'Push master'
+    git push -f origin tempBuildBranch:master
+  displayName: 'Push Build to master'
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/dev' ))
 
 # Tag with the release version as well as 'latest' and push the tag.
 - script: |
+    git checkout master
+    git pull
     git tag -a v$(RELEASE_VERSION) -m "azure pipelines build $(Build.BuildNumber)"
     git tag -a latest -m "azure pipelines build $(Build.BuildNumber)"
     git push --tags
