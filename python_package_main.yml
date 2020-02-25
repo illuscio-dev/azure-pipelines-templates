@@ -11,7 +11,7 @@ parameters:
 
   # Publish to the public pypi.org
   - name: publishToPypiOrg
-    type: bool
+    type: boolean
     default: false
 
   # Minimum Coverage Percentage to Pass Tests.
@@ -39,10 +39,10 @@ parameters:
     type: boolean
     default: true
 
-    # Whether to publish docs to S3.
-    - name: publishDocsS3
-      type: boolean
-      default: true
+  # Whether to publish docs to S3.
+  - name: publishDocsS3
+    type: boolean
+    default: true
 
 
 jobs:
