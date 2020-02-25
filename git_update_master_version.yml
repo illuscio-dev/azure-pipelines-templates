@@ -18,8 +18,10 @@ steps:
 - script: |
     git checkout master
     git pull
+    git tag -d latest
     git tag -a v$(RELEASE_VERSION) -m "azure pipelines build $(Build.BuildNumber)"
     git tag -a latest -m "azure pipelines build $(Build.BuildNumber)"
+    git push origin :refs/tags/latest
     git push --tags
   displayName: 'Publish tagged version.'
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/dev' ))
