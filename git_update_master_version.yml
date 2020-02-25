@@ -4,7 +4,7 @@ steps:
 - script: |
     git checkout -b tempBuildBranch
     git add -A .
-    git commit -am "release build for $(RELEASE_VERSION)."
+    git commit -am "release build for $(RELEASE_VERSION)"
   displayName: 'Commit changes to temp branch & add build files.'
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/dev' ))
 
