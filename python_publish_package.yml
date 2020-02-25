@@ -46,9 +46,7 @@ steps:
     )
 
 - script: |
-    twine upload \
-    -r https://test.pypi.org/simple/ \
-    dist/*
+    twine upload dist/*
   env:
     TWINE_USERNAME: $(PYPIORG_USER)
     TWINE_PASSWORD: $(PYPIORG_PASSWORD)
