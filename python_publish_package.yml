@@ -48,8 +48,11 @@ steps:
 - script: |
     twine upload \
     -r https://test.pypi.org/simple/ \
-    --config-file $(PYPIRC_PATH) \
     dist/*
+  env:
+    TWINE_USERNAME: $(PYPIORG_USER)
+    TWINE_PASSWORD: $(PYPIORG_PASSWORD)
+    TWINE_NON_INTERACTIVE: 1
   displayName: 'Upload package to pypi.org'
   condition: |
     and(
