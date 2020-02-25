@@ -9,16 +9,11 @@ steps:
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/dev' ))
 
 # Merge into master, resolving conflicts by favoring our temp branch.
-- script: git merge -s recursive -Xours origin/master
-  displayName: 'Force merge ours'
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/dev' ))
-
-# Pull and merge into the latest version of master.
 - script: |
     git checkout master
     git pull
-    git merge tempBuildBranch
-  displayName: 'Merge into master.'
+    git merge -s theirs tempBuildBranch
+  displayName: 'Force merge into master.'
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/dev' ))
 
 # Push our new master branch.
