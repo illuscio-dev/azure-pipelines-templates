@@ -1,0 +1,20 @@
+parameters:
+
+  # Whether to build and publish docs.
+  - name: publishDocs
+    type: boolean
+
+
+# Copy docs to /docs folder for github pages. We need to add a .nojekyll file to tell
+# github pages not to run a build, since we are building it now.
+- script: |
+    mkdir
+    cp -R ./zdocs/build/html ./docs
+    echo > "./docs/.nojekyll"
+  displayName: 'Publishing docs to /docs'
+  condition: |
+    and(
+      succeeded(),
+      ${{ parameters.publishDocs }},
+      eq(variables['Build.SourceBranch'], 'refs/heads/dev')
+    )

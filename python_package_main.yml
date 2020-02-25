@@ -33,10 +33,10 @@ parameters:
     type: boolean
     default: true
 
-  # Whether to publish docs to S3.
-  - name: publishDocsS3
-    type: boolean
-    default: true
+    # Whether to publish docs to S3.
+    - name: publishDocsS3
+      type: boolean
+      default: true
 
 
 jobs:

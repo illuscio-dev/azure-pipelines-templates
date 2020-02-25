@@ -31,16 +31,10 @@ steps:
         eq(variables['Build.SourceBranch'], 'refs/heads/dev')
       )
 
-  - script: |
-      mkdir
-      cp -R ./zdocs/build/html ./docs
-    displayName: 'Publishing docs to /docs'
-    condition: |
-      and(
-        succeeded(),
-        ${{ parameters.publishDocs }},
-        eq(variables['Build.SourceBranch'], 'refs/heads/dev')
-      )
+  # Set up docs for github pages publishing.
+  - template: docs_publish_github_pages.yml
+    parameters:
+      publishDocs: ${{ parameters.publishDocs }}
 
   # Release docs on aws.
   - template: docs_publish_to_s3.yml

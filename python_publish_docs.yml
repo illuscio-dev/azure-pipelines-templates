@@ -21,10 +21,10 @@ steps:
         eq(variables['Build.SourceBranch'], 'refs/heads/dev')
       )
 
-  - script: |
-      mkdir
-      cp -R ./zdocs/build/html ./docs
-    displayName: 'Publishing Docs to /docs'
+  # Set up docs for github pages publishing.
+  - template: docs_publish_github_pages.yml
+    parameters:
+      publishDocs: ${{ parameters.publishDocs }}
 
   # Download python helper scripts
   - template: docs_publish_to_s3.yml
