@@ -18,7 +18,7 @@ parameters:
   # Link to go compiler to use.
   - name: goVersionLinkLinux
     type: string
-    default: https://dl.google.com/go/go1.13.6.linux-amd64.tar.gz
+    default: https://dl.google.com/go/go1.14.linux-amd64.tar.gz
 
   # Minimum coverage allowed for successful release.
   - name: minimumCoverage
