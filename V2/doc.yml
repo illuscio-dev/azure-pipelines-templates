@@ -24,8 +24,8 @@ steps:
     condition: succeeded()
 
   # Set up docs for github pages publishing.
-  - template: docs_publish_github_pages.yml
+  - template: doc_publish_github_pages.yml
 
   # Release docs on aws.
   - ${{ if parameters.publishDocsS3 }}:
-    - template: docs_publish_to_s3.yml
+    - template: doc_publish_to_s3.yml
