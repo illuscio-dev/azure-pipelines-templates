@@ -1,6 +1,7 @@
-# Link to go compiler to use.
-- name: goVersion
-  type: string
+parameters:
+  # Go version to use
+  - name: goVersion
+    type: string
 
 # Setup go
 steps:
