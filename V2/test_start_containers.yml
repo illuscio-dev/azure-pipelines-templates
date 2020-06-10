@@ -15,29 +15,26 @@ parameters:
 
 steps:
 
-# RABBIT MQ
-- script: docker pull 'mongo'
-  displayName: 'downloading mongodb docker'
-  condition: and(succeeded(), eq('${{ parameters.testMongo }}', true))
-
-- script: docker run -d --name mongotest -p 127.0.0.1:57017:27017/tcp mongo
-  displayName: 'start test mongo server'
-  condition: and(succeeded(), eq('${{ parameters.testMongo }}', true))
-
 # MONGO DB
-- script: docker pull 'rabbitmq:3.8-management'
-  displayName: 'downloading rabbitMQ docker'
-  condition: and(succeeded(), eq('${{ parameters.testRabbit }}', true))
+- ${{ if parameters.testMongo }}:
+  - script: docker pull 'mongo'
+    displayName: 'downloading mongodb docker'
 
-- script: docker run -d --name rabbittest -p 127.0.0.1:57018:5672/tcp rabbitmq:3.8-management
-  displayName: 'start test rabbitMQ server'
-  condition: and(succeeded(), eq('${{ parameters.testRabbit }}', true))
+  - script: docker run -d --name mongotest -p 127.0.0.1:57017:27017/tcp mongo
+    displayName: 'start test mongo server'
+
+# RABBIT MQ
+- ${{ if parameters.testRabbit }}:
+  - script: docker pull 'rabbitmq:3.8-management'
+    displayName: 'downloading rabbitMQ docker'
+
+  - script: docker run -d --name rabbittest -p 127.0.0.1:57018:5672/tcp rabbitmq:3.8-management
+    displayName: 'start test rabbitMQ server'
 
 # REDIS
-- script: docker pull redis
-  displayName: 'downloading redis docker'
-  condition: and(succeeded(), eq('${{ parameters.testRedis }}', true))
+- ${{ if parameters.testRedis }}:
+  - script: docker pull redis
+    displayName: 'downloading redis docker'
 
-- script: docker run -d --name redis-test -p 127.0.0.1:6359:6379/tcp redis
-  displayName: 'start test redis server'
-  condition: and(succeeded(), eq('${{ parameters.testRedis }}', true))
+  - script: docker run -d --name redis-test -p 127.0.0.1:6359:6379/tcp redis
+    displayName: 'start test redis server'

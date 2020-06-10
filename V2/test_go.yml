@@ -1,5 +1,10 @@
 steps:
   - script: |
+      go get -u github.com/jstemmer/go-junit-report
+    displayName: 'Go get test tools'
+    workingDirectory: $(Agent.BuildDirectory)
+
+  - script: |
       mkdir ./reports
       python3 ./zdevelop/make_scripts/make_test.py \
       2>&1 \
