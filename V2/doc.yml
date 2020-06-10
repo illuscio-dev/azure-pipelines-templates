@@ -15,7 +15,7 @@ parameters:
     type: boolean
 
 steps:
-  - ${{ if eq(parameters.language), 'GO') }}:
+  - ${{ if eq(parameters.language, 'GO') }}:
     - template: doc_setup_go.yml
 
   # Build Documentation With Sphinx
