@@ -134,5 +134,5 @@ jobs:
             publishDocsS3: ${{ parameters.publishDocsS3 }}
 
       # If we are building the dev branch, we want to publish
-      - ${{ if and(eq(variables['Build.SourceBranch'], 'refs/heads/dev') }}:
+      - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/dev') }}:
           - template: V2/publish.yml
