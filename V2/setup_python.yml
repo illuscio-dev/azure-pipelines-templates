@@ -41,9 +41,9 @@ steps:
     displayName: 'Upgrade pip and setuptools'
 
   - ${{ if parameters.installLocalPackage }}:
-  - script: pip install --no-cache-dir -e .[build,doc,lint,test]
-    displayName: 'Install python dependencies'
-    condition: succeeded()
+    - script: pip install --no-cache-dir -e .[build,doc,lint,test]
+      displayName: 'Install python dependencies'
+      condition: succeeded()
 
   # Freeze the list of packages this build was made with for reference.
   - script: pip freeze > pip-freeze.txt
