@@ -85,20 +85,20 @@ jobs:
 
     steps:
       # Setup git environment.
-      - template: V2/setup_git.yml
+      - template: setup_git.yml
 
       # Download python helper scripts
-      - template: V2/scripts_download.yml
+      - template: scripts_download.yml
 
       # Setup python environment.
-      - template: V2/setup_python.yml
+      - template: setup_python.yml
         parameters:
           pythonVersion: ${{ parameters.pythonVersion }}
           pypiAzureArtifactFeed: ${{ parameters.pypiAzureArtifactFeed }}
 
       # Setup go environment. We need this for building protoc docs, so we'll just do it
       # for every build (for the time being).
-      - template: V2/setup_go.yml
+      - template: setup_go.yml
         parameters:
           goVersionLink: ${{ parameters.goVersion }}
 
@@ -107,13 +107,13 @@ jobs:
         displayName: 'Get repo name'
 
       # Run lint.
-      - template: V2/lint.yml
+      - template: lint.yml
         parameters:
           minimumCoverage: ${{ parameters.minimumCoverage }}
 
       # Run tests.
       - if ${{ parameters.runTests }}:
-        - template: V2/test.yml
+        - template: test.yml
           parameters:
             testMongo: ${{parameters.testMongo}}
             testRabbit: ${{parameters.testRabbit}}
@@ -129,7 +129,7 @@ jobs:
 
       # If we are in a release build and want to publish docs, do it.
       - ${{ if and(eq(variables['Build.SourceBranch'], 'refs/heads/dev'), parameters.publishDocs) }}:
-        - template: V2/doc.yml
+        - template: doc.yml
           parameters:
             publishDocsS3: ${{ parameters.publishDocsS3 }}
 
