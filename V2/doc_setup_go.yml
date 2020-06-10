@@ -1,0 +1,7 @@
+
+steps:
+  # Build API documentation. We just need to build the source static html files here
+  # and sphinx can use them.
+  - script: docmodule-go
+    displayName: 'Generate static API docs'
+    condition: succeeded()

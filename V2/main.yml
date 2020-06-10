@@ -120,20 +120,22 @@ jobs:
             testRabbit: ${{parameters.testRabbit}}
             testRedis: ${{parameters.testRedis}}
 
-      # Get the release version.
+      # Building docs and publishing only need be done on dev branch builds, which are
+      # candidates for release.
       - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/dev') }}:
+
+        # Get the release version.
         - script: python3 $(BUILD_SCRIPTS_DIR)/get_release_version.py
           displayName: 'get release version'
           env:
             PublishLanguage: "GO"
           condition: succeeded()
 
-      # If we are in a release build and want to publish docs, do it.
-      - ${{ if and(eq(variables['Build.SourceBranch'], 'refs/heads/dev'), parameters.publishDocs) }}:
-        - template: doc.yml
-          parameters:
-            publishDocsS3: ${{ parameters.publishDocsS3 }}
+        # If we are in a release build and want to publish docs, do it.
+        - ${{ if parameters.publishDocs }}:
+          - template: doc.yml
+            parameters:
+              publishDocsS3: ${{ parameters.publishDocsS3 }}
 
-      # If we are building the dev branch, we want to publish
-      - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/dev') }}:
-          - template: publish.yml
+        # If we are building the dev branch, we want to publish.
+        - template: publish.yml

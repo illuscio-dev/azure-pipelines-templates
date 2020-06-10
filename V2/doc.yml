@@ -1,0 +1,31 @@
+parameters:
+  # What the primary language of this build is. Choices are GO | PYTHON | DOCKER.
+  - name: language
+    type: string
+
+  # Whether to generate protobuff docs
+  - name: docProtoc
+    type: boolean
+
+  # Whether to generate REST API docs with Redoc.
+  - name: docRedoc
+    type: boolean
+
+  - name: publishDocsS3
+    type: boolean
+
+steps:
+  - ${{ if eq(parameters.language), 'GO') }}:
+    - template: doc_setup_go.yml
+
+  # Build Documentation With Sphinx
+  - script: python setup.py build_sphinx -E
+    displayName: 'Build docs'
+    condition: succeeded()
+
+  # Set up docs for github pages publishing.
+  - template: docs_publish_github_pages.yml
+
+  # Release docs on aws.
+  - ${{ if parameters.publishDocsS3 }}:
+    - template: docs_publish_to_s3.yml
