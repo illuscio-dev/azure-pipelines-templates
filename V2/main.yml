@@ -112,7 +112,7 @@ jobs:
           language: ${{parameters.language}}
 
       # Run tests.
-      - if ${{ eq(parameters.runTests, True) }}:
+      - ${{ if parameters.runTests }}:
         - template: test.yml
           parameters:
             language: ${{parameters.language}}
