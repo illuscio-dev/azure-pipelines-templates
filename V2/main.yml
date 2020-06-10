@@ -135,6 +135,9 @@ jobs:
         - ${{ if parameters.publishDocs }}:
           - template: doc.yml
             parameters:
+              language: ${{ parameters.language }}
+              docProtoc: ${{ parameters.docProtoc }}
+              docRedoc: ${{ parameters.docRedoc }}
               publishDocsS3: ${{ parameters.publishDocsS3 }}
 
         # If we are building the dev branch, we want to publish.
