@@ -8,7 +8,7 @@ steps:
       mkdir ./reports
       python3 ./zdevelop/make_scripts/make_test.py \
       2>&1 \
-      | tee ./reports/testResults.txt`
+      | tee ./reports/testResults.txt
     displayName: 'Run Tests'
 
   - script: cat ./reports/testResults.txt | go-junit-report > ./reports/tests_junit.xml
