@@ -139,3 +139,6 @@ jobs:
 
         # If we are building the dev branch, we want to publish.
         - template: publish.yml
+          parameters:
+            language: ${{parameters.language}}
+            buildType: ${{parameters.buildType  }}

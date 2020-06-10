@@ -1,3 +1,12 @@
+parameters:
+  # What the primary language of this build is. Choices are GO | PYTHON | DOCKER.
+  - name: language
+    type: string
+
+  # What the repo type for this build. Choices are LIBRARY | SERVICE. Service will
+  # result in docker container build and push.
+  - name: buildType
+    type: string
 
 steps:
   # Merge build to master and tag as release version (this is how go modules are
