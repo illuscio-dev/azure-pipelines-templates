@@ -1,5 +1,3 @@
-parameters:
-
 steps:
 
 # Copy docs to /docs folder for github pages. We need to add a .nojekyll file to tell
