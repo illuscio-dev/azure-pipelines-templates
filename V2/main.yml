@@ -109,7 +109,7 @@ jobs:
       # Run lint.
       - template: lint.yml
         parameters:
-          minimumCoverage: ${{ parameters.minimumCoverage }}
+          language: ${{parameters.language}}
 
       # Run tests.
       - if ${{ parameters.runTests }}:
@@ -135,4 +135,4 @@ jobs:
 
       # If we are building the dev branch, we want to publish
       - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/dev') }}:
-          - template: V2/publish.yml
+          - template: publish.yml
