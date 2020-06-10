@@ -1,0 +1,56 @@
+parameters:
+  # What the primary language of this build is. Choices are GO | PYTHON | DOCKER
+  - name: language
+    type: string
+
+  - name: pythonVersion
+    type: string
+    default: 3.8
+
+  # Artifact feed to pull custom packages from
+  - name: pypiAzureArtifactFeed
+    type: string
+
+  # Whether to install a package in the working directory. Set to false if you only
+  # need access to pip.
+  - name: installLocalPackage
+    type: boolean
+    default: true
+
+# Setup Python
+steps:
+
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: ${{ parameters.pythonVersion }}
+      architecture: 'x64'
+
+  - script: which python
+    displayName: 'Debug python location'
+
+  # Setup access to artifact feed.
+  - task: PipAuthenticate@1
+    displayName: 'Pip Authenticate'
+    inputs:
+      # Provide list of feed names which you want to authenticate
+      artifactFeeds: ${{ parameters.pypiAzureArtifactFeed }}
+    # We only need to do this step on python builds
+    condition: |
+      and(
+        succeeded(),
+        ne('${{ parameters.pypiAzureArtifactFeed }}', '-'),
+      )
+
+  - script: |
+      python -m pip install --upgrade pip
+      pip install --upgrade setuptools
+    displayName: 'Upgrade pip and setuptools'
+
+  - script: pip install --no-cache-dir -e .[build,doc,lint,test]
+    displayName: 'Install python dependencies'
+    condition: and(succeeded(), eq(${{ parameters.installLocalPackage }}, true))
+
+  # Freeze the list of packages this build was made with for reference.
+  - script: pip freeze > pip-freeze.txt
+    displayName: 'Freeze python package list'
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/dev'))

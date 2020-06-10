@@ -1,0 +1,43 @@
+# PIPELINE CONFIGURATION
+parameters:
+  # What the primary language of this build is. Choices are GO | PYTHON | DOCKER
+  - name: language
+    type: string
+
+  # Whether to run tests
+  - name: runTests
+    type: bool
+    default: true
+
+  # Whether to start a mongo test container.
+  - name: testMongo
+    type: boolean
+    default: false
+
+  # Whether to start a Rabbit test container.
+  - name: testRabbit
+    type: boolean
+    default: false
+
+  # Whether to start a Redis test container.
+  - name: testRedis
+    type: boolean
+    default: false
+
+steps:
+
+  - template: test_start_containers.yml
+    parameters:
+      testMongo: ${{parameters.testMongo}}
+      testRabbit: ${{parameters.testRabbit}}
+      testRedis: ${{parameters.testRedis}}
+
+  - ${{ if eq(parameters.language, 'GO') }}:
+    - template: V2/test_go.yml
+
+  - task: PublishTestResults@2
+    condition: succeededOrFailed()
+    inputs:
+      testRunner: JUnit
+      testResultsFiles: reports/tests_junit.xml
+      failTaskOnFailedTests: true

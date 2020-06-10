@@ -1,0 +1,34 @@
+# Link to go compiler to use.
+- name: goVersion
+  type: string
+
+# Setup go
+steps:
+
+# Downloads and extracts go runtime.
+- task: GoTool@0
+  inputs:
+    version: ${{ parameters.goVersion }}
+
+- script: |
+    echo '##vso[task.prependpath]$(GOBIN)'
+    echo '##vso[task.prependpath]$(GOROOT)/bin'
+  displayName: 'Install go version (linux).'
+  condition: and(succeeded(), eq(variables['Agent.OS'], 'Linux'))
+
+- script: go version
+  displayName: 'Print go version'
+
+- script: go env
+  displayName: 'Print go env'
+
+- script: |
+    go get -u github.com/illuscio-dev/docmodule-go
+    go get -u golang.org/x/tools/cmd/godoc
+    go get -u github.com/mgechev/revive
+    go get -u github.com/jstemmer/go-junit-report
+  displayName: 'Go get CLI tools'
+  workingDirectory: $(Agent.BuildDirectory)
+
+- script: go get -v -t -d ./...
+  displayName: 'Go get dependencies'

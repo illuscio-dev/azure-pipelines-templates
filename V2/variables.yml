@@ -1,0 +1,18 @@
+variables:
+  # Go binaries path.
+  GOBIN: '/opt/hostedtoolcache/go/bin'
+
+  # Link to org where private gomods are stored
+  GOPRIVATE: github.com/illuscio-dev
+
+  # YOUR PRIVATE REPO GOES HERE LEAVE BLANK TO NOT USE.
+  PIP_INDEX_URL:
+  # We put the normal pypi service second. We do this to protect from downloading an
+  # unknown package of the same name as one of your private packages.
+  PIP_EXTRA_INDEX_URL: https://pypi.python.org/simple/
+
+  # Directory that build scripts will be located in once downloaded
+  BUILD_SCRIPTS_DIR: '$(Agent.TempDirectory)/build_scripts'
+
+  # Repo to download python scrips from
+  BUILD_SCRIPTS_REPO: git@github.com:illuscio-dev/azure-pipelines-scripts.git

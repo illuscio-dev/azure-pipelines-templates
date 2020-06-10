@@ -1,0 +1,26 @@
+# What the primary language of this build is. Choices are GO | PYTHON | DOCKER
+parameters:
+
+  - name: language
+    type: string
+
+steps:
+
+  - ${{ if eq(parameters.language, 'GO') }}:
+    # Lint go using revive
+    - script: revive -config revive.toml ./...
+      displayName: 'Lint'
+
+  - ${{ if eq(parameters.language, 'PYTHON') }}:
+      # Lint python using black, flake8 and mypy
+    - script: |
+        flake8
+      displayName: 'lint (flake8)'
+
+    - script: |
+        black . --check
+      displayName: 'lint (black)'
+
+    - script: |
+        mypy .
+      displayName: 'type checking (mypy)'

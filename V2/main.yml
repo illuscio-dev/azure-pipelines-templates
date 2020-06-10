@@ -1,0 +1,138 @@
+# PIPELINE CONFIGURATION
+parameters:
+  # What the primary language of this build is. Choices are GO | PYTHON | DOCKER.
+  - name: language
+    type: string
+
+  # What the repo type for this build. Choices are LIBRARY | SERVICE. Service will
+  # result in docker container build and push.
+  - name: buildType
+    type: string
+
+  # Artifact feed to pull custom packages from (pass blank if not using).
+  - name: pypiAzureArtifactFeed
+    type: string
+    default: "-"
+
+  # Repo containing helper scripts.
+  - name: scriptsRepo
+    type: string
+    default: git@github.com:illuscio-dev/azure-pipelines-scripts.git
+
+  # Python version to use for python tasks.
+  - name: pythonVersion
+    type: string
+    default: '3.8'
+
+  # Link to go compiler to use.
+  - name: goVersion
+    type: string
+    default: 1.14
+
+  # Whether to run tests
+  - name: runTests
+    type: bool
+    default: true
+
+  # Whether to start a mongo test container.
+  - name: testMongo
+    type: boolean
+    default: false
+
+  # Whether to start a Rabbit test container.
+  - name: testRabbit
+    type: boolean
+    default: false
+
+  # Whether to start a Redis test container.
+  - name: testRedis
+    type: boolean
+    default: false
+
+  # Whether to build and publish docs.
+  - name: publishDocs
+    type: boolean
+    default: true
+
+  # Whether to generate protobuff docs
+  - name: docProtoc
+    type: boolean
+    default: false
+
+  # Whether to generate REST API docs with Redoc.
+  - name: docRedoc
+    type: boolean
+    default: false
+
+  # Whether to publish docs to S3.
+  - name: publishDocsS3
+    type: boolean
+    default: false
+
+  # Whether to build and publish a docker container.
+  - name: publishContainer
+    type: boolean
+    default: false
+
+jobs:
+
+  - job: 'Test_Lint_Build'
+    timeoutInMinutes: 5
+    cancelTimeoutInMinutes: 2
+
+    pool:
+      vmImage: 'ubuntu-16.04'
+
+    steps:
+      # Setup git environment.
+      - template: V2/setup_git.yml
+
+      # Download python helper scripts
+      - template: V2/scripts_download.yml
+
+      # Setup python environment.
+      - template: V2/setup_python.yml
+        parameters:
+          pythonVersion: ${{ parameters.pythonVersion }}
+          pypiAzureArtifactFeed: ${{ parameters.pypiAzureArtifactFeed }}
+
+      # Setup go environment. We need this for building protoc docs, so we'll just do it
+      # for every build (for the time being).
+      - template: V2/setup_go.yml
+        parameters:
+          goVersionLink: ${{ parameters.goVersion }}
+
+      # Get Repo Name.
+      - script: python3 $(BUILD_SCRIPTS_DIR)/get_repo_name.py
+        displayName: 'Get repo name'
+
+      # Run lint.
+      - template: V2/lint.yml
+        parameters:
+          minimumCoverage: ${{ parameters.minimumCoverage }}
+
+      # Run tests.
+      - ${{ if ${{ parameters.runTests }} }}:
+        - template: V2/test.yml
+          parameters:
+            testMongo: ${{parameters.testMongo}}
+            testRabbit: ${{parameters.testRabbit}}
+            testRedis: ${{parameters.testRedis}}
+
+      # Get the release version.
+      - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/dev') }}:
+        - script: python3 $(BUILD_SCRIPTS_DIR)/get_release_version.py
+          displayName: 'get release version'
+          env:
+            PublishLanguage: "GO"
+          condition: succeeded()
+
+      # If we are in a release build and want to publish docs, do it.
+      - ${{ if and(eq(variables['Build.SourceBranch'], 'refs/heads/dev'), ${{ parameters.publishDocs }}) }}:
+        - template: V2/doc.yml
+          parameters:
+            publishDocsS3: ${{ parameters.publishDocsS3 }}
+
+      # If we are building the dev branch, we want to publish
+      - ${{ if and(eq(variables['Build.SourceBranch'], 'refs/heads/dev') }}:
+          - template: V2/publish.yml
