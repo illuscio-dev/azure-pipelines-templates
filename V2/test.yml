@@ -32,7 +32,7 @@ steps:
       testRabbit: ${{parameters.testRabbit}}
       testRedis: ${{parameters.testRedis}}
 
-  - ${{ if eq(parameters.language, 'GO') }}:
+  - ${{ if eq( parameters.language, 'GO') }}:
     - template: V2/test_go.yml
 
   - task: PublishTestResults@2

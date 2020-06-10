@@ -128,7 +128,7 @@ jobs:
           condition: succeeded()
 
       # If we are in a release build and want to publish docs, do it.
-      - ${{ if and(eq(variables['Build.SourceBranch'], 'refs/heads/dev'), ${{ parameters.publishDocs }}) }}:
+      - ${{ if and(eq(variables['Build.SourceBranch'], 'refs/heads/dev'), parameters.publishDocs) }}:
         - template: V2/doc.yml
           parameters:
             publishDocsS3: ${{ parameters.publishDocsS3 }}
