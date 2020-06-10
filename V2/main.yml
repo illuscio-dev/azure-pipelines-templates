@@ -31,7 +31,7 @@ parameters:
 
   # Whether to run tests
   - name: runTests
-    type: bool
+    type: boolean
     default: true
 
   # Whether to start a mongo test container.
@@ -112,7 +112,7 @@ jobs:
           minimumCoverage: ${{ parameters.minimumCoverage }}
 
       # Run tests.
-      - ${{ if ${{ parameters.runTests }} }}:
+      - if ${{ parameters.runTests }}:
         - template: V2/test.yml
           parameters:
             testMongo: ${{parameters.testMongo}}
