@@ -1,0 +1,14 @@
+steps:
+  - script: pip install --no-cache-dir -e .[test]
+    displayName: 'Install python test dependencies'
+
+  - script: |
+      pytest --doctest-modules --junitxml=junit/test-results.xml
+    displayName: 'pytest'
+
+  - task: PythonScript@0
+    displayName: 'check coverage'
+    inputs:
+      scriptSource: filePath
+      scriptPath: '$(BUILD_SCRIPTS_DIR)/python_check_coverage.py'
+      failOnStderr: true

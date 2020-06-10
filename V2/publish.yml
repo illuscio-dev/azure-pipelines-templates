@@ -8,8 +8,34 @@ parameters:
   - name: buildType
     type: string
 
+  # Artifact feed to pull custom packages from (pass blank if not using).
+  - name: pypiAzureArtifactFeed
+    type: string
+
+  # Publish to the public pypi.org
+  - name: publishToPypiOrg
+    type: boolean
+
+  # Whether to build and publish a docker container.
+  - name: publishContainer
+    type: boolean
+
 steps:
+  # Freeze the list of packages this build was made with for reference.
+  - script: pip freeze > pip-freeze.txt
+    displayName: 'Freeze python package list'
+
+  - ${{ if and(eq(parameters.language, 'PYTHON'), eq(paramters.buildType, 'LIBRARY') }}:
+      - template: publish_setup_python_library.yml
+
   # Merge build to master and tag as release version (this is how go modules are
   # published). We are going to do it for every type of release, so we always have a
   # history of tags for each release.
   - template: git_update_master_version.yml
+
+  # If this is a python library we need to release to pypi
+  - ${{ if and(eq(parameters.language, 'PYTHON'), eq(paramters.buildType, 'LIBRARY') }}:
+      - template: publish_python_library.yml
+        parameters:
+          pypiAzureArtifactFeed: ${{ parameters.pypiAzureArtifactFeed }}
+          publishToPypiOrg: ${{ parameters.publishToPypiOrg }}

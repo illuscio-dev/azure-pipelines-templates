@@ -1,0 +1,6 @@
+steps:
+
+  # We need to install these before the general build steps so they get included in the
+  # pip freeze.
+  - script: pip install --no-cache-dir -e .[build]
+    displayName: 'Install python doc dependencies'

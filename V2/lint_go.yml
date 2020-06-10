@@ -1,0 +1,10 @@
+steps:
+  # Fetch and build revive for linting
+  - script: |
+      go get -u github.com/mgechev/revive
+    displayName: 'Go get lint tools'
+    workingDirectory: $(Agent.BuildDirectory)
+
+  # Lint go using revive
+  - script: revive -config revive.toml ./...
+    displayName: 'Lint'

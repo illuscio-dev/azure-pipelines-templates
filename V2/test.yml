@@ -35,6 +35,9 @@ steps:
   - ${{ if eq( parameters.language, 'GO') }}:
     - template: test_go.yml
 
+  - ${{ if eq( parameters.language, 'PYTHON') }}:
+      - template: test_python.yml
+
   - task: PublishTestResults@2
     condition: succeededOrFailed()
     inputs:

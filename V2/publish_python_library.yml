@@ -1,0 +1,39 @@
+parameters:
+  # Artifact feed to pull custom packages from.
+  - name: pypiAzureArtifactFeed
+    type: string
+
+  # Publish to the public pypi.org
+  - name: publishToPypiOrg
+    type: boolean
+
+steps:
+  # Release the package on our pypi
+  - script: python3 setup.py sdist bdist_wheel
+    displayName: 'Build package'
+
+  # PUBLISH TO AZURE PRIVATE PYPI ###########
+  - ${{ if ne(parameters.pypiAzureArtifactFeed, '-') }}:
+    # Set up twine
+    - task: TwineAuthenticate@1
+        displayName: 'Authenticate Twine'
+        inputs:
+          # In this case, name of the feed is 'myTestFeed'
+          artifactFeed: ${{ parameters.pypiAzureArtifactFeed }}
+
+    - script: |
+        twine upload \
+        -r ${{ parameters.pypiAzureArtifactFeed }} \
+        --config-file $(PYPIRC_PATH) \
+        dist/*
+      displayName: 'Upload package to azure pypi'
+
+  # Publish to public pypi
+  - ${{ if parameters.publishToPypiOrg }}:
+    - script: |
+        twine upload dist/*
+      env:
+        TWINE_USERNAME: $(PYPIORG_USER)
+        TWINE_PASSWORD: $(PYPIORG_PASSWORD)
+        TWINE_NON_INTERACTIVE: 1
+      displayName: 'Upload package to pypi.org'

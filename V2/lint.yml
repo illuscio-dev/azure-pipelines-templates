@@ -7,27 +7,7 @@ parameters:
 steps:
 
   - ${{ if eq(parameters.language, 'GO') }}:
-
-    # Fetch and build revive for linting
-    - script: |
-        go get -u github.com/mgechev/revive
-      displayName: 'Go get lint tools'
-      workingDirectory: $(Agent.BuildDirectory)
-
-    # Lint go using revive
-    - script: revive -config revive.toml ./...
-      displayName: 'Lint'
+    - template: lint_go.yml
 
   - ${{ if eq(parameters.language, 'PYTHON') }}:
-      # Lint python using black, flake8 and mypy
-    - script: |
-        flake8
-      displayName: 'lint (flake8)'
-
-    - script: |
-        black . --check
-      displayName: 'lint (black)'
-
-    - script: |
-        mypy .
-      displayName: 'type checking (mypy)'
+    - template: lint_python.yml

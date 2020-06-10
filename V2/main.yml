@@ -69,6 +69,11 @@ parameters:
     type: boolean
     default: false
 
+  # Whether to publish python package to pypi.org.
+  - name: publishToPypiOrg
+    type: boolean
+    default: false
+
   # Whether to build and publish a docker container.
   - name: publishContainer
     type: boolean
@@ -116,10 +121,10 @@ jobs:
       - ${{ if parameters.runTests }}:
         - template: test.yml
           parameters:
-            language: ${{parameters.language}}
-            testMongo: ${{parameters.testMongo}}
-            testRabbit: ${{parameters.testRabbit}}
-            testRedis: ${{parameters.testRedis}}
+            language: ${{ parameters.language }}
+            testMongo: ${{ parameters.testMongo }}
+            testRabbit: ${{ parameters.testRabbit }}
+            testRedis: ${{ parameters.testRedis }}
 
       # Building docs and publishing only need be done on dev branch builds, which are
       # candidates for release.
@@ -144,5 +149,8 @@ jobs:
         # If we are building the dev branch, we want to publish.
         - template: publish.yml
           parameters:
-            language: ${{parameters.language}}
-            buildType: ${{parameters.buildType  }}
+            language: ${{ parameters.language }}
+            buildType: ${{ parameters.buildType }}
+            pypiAzureArtifactFeed: ${{ parameters.pypiAzureArtifactFeed }}
+            publishToPypiOrg: ${{ parameters.publishToPypiOrg }}
+            publishContainer: ${{ parameters.publishContainer }}

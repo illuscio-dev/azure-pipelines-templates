@@ -1,0 +1,3 @@
+steps:
+  - script: pip install --no-cache-dir -e .[doc]
+    displayName: 'Install python doc dependencies'
