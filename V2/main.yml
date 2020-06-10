@@ -115,6 +115,7 @@ jobs:
       - if ${{ eq(parameters.runTests, True) }}:
         - template: test.yml
           parameters:
+            language: ${{parameters.language}}
             testMongo: ${{parameters.testMongo}}
             testRabbit: ${{parameters.testRabbit}}
             testRedis: ${{parameters.testRedis}}
