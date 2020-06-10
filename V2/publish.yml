@@ -21,12 +21,15 @@ parameters:
     type: boolean
 
 steps:
+
+  # Setup build tools / dependencies. We run this first so additional python packages
+  # are not excluded from the pip freeze.
+  - ${{ if and(eq(parameters.language, 'PYTHON'), eq(paramters.buildType, 'LIBRARY')) }}:
+      - template: publish_setup_python_library.yml
+
   # Freeze the list of packages this build was made with for reference.
   - script: pip freeze > pip-freeze.txt
     displayName: 'Freeze python package list'
-
-  - ${{ if and(eq(parameters.language, 'PYTHON'), eq(paramters.buildType, 'LIBRARY')) }}:
-      - template: publish_setup_python_library.yml
 
   # Merge build to master and tag as release version (this is how go modules are
   # published). We are going to do it for every type of release, so we always have a
