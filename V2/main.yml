@@ -100,7 +100,7 @@ jobs:
       # for every build (for the time being).
       - template: setup_go.yml
         parameters:
-          goVersionLink: ${{ parameters.goVersion }}
+          goVersion: ${{ parameters.goVersion }}
 
       # Get Repo Name.
       - script: python3 $(BUILD_SCRIPTS_DIR)/get_repo_name.py
