@@ -1,7 +1,4 @@
 parameters:
-  # What the primary language of this build is. Choices are GO | PYTHON | DOCKER
-  - name: language
-    type: string
 
   - name: pythonVersion
     type: string
@@ -29,26 +26,24 @@ steps:
     displayName: 'Debug python location'
 
   # Setup access to artifact feed.
-  - task: PipAuthenticate@1
-    displayName: 'Pip Authenticate'
-    inputs:
-      # Provide list of feed names which you want to authenticate
-      artifactFeeds: ${{ parameters.pypiAzureArtifactFeed }}
-    # We only need to do this step on python builds
-    condition: |
-      and(
-        succeeded(),
-        ne('${{ parameters.pypiAzureArtifactFeed }}', '-'),
-      )
+  - ${{ if ne(parameters.pypiAzureArtifactFeed, '-') }}:
+    - task: PipAuthenticate@1
+      displayName: 'Pip Authenticate'
+      inputs:
+        # Provide list of feed names which you want to authenticate
+        artifactFeeds: ${{ parameters.pypiAzureArtifactFeed }}
+      # We only need to do this step on python builds
+      condition: succeeded()
 
   - script: |
       python -m pip install --upgrade pip
       pip install --upgrade setuptools
     displayName: 'Upgrade pip and setuptools'
 
+  - ${{ if parameters.installLocalPackage }}:
   - script: pip install --no-cache-dir -e .[build,doc,lint,test]
     displayName: 'Install python dependencies'
-    condition: and(succeeded(), eq(${{ parameters.installLocalPackage }}, true))
+    condition: succeeded()
 
   # Freeze the list of packages this build was made with for reference.
   - script: pip freeze > pip-freeze.txt
