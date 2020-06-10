@@ -6,7 +6,7 @@ parameters:
 
   # Whether to run tests
   - name: runTests
-    type: bool
+    type: boolean
     default: true
 
   # Whether to start a mongo test container.
