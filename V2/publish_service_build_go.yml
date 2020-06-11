@@ -9,10 +9,11 @@ steps:
   - script: |
       docker build \
       --no-cache \
-      --build-arg GOPRIVATE=GOPRIVATE \
+      --build-arg GOPRIVATE=$GOPRIVATE \
       --secret id=git_key,src=$(gitSSHKey.secureFilePath) \
       -t $REGISTRY_NAME/$SERVICE_NAME:$RELEASE_VERSION \
-      -t $REGISTRY_NAME/$SERVICE_NAME:latest .
+      -t $REGISTRY_NAME/$SERVICE_NAME:latest \
+      .
     env:
       RELEASE_VERSION: $(RELEASE_VERSION)
       REGISTRY_NAME: $(CONTAINER_REGISTRY_NAME)
