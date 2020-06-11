@@ -11,6 +11,7 @@ steps:
     displayName: 'Run Tests'
 
   - script: |
+      mkdir ./reports
       cat ./zdevelop/tests/_reports/test_full.txt \
         | go-junit-report > ./reports/tests_junit.xml
     condition: succeededOrFailed()
