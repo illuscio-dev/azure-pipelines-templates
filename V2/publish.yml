@@ -40,7 +40,7 @@ steps:
         publishToPypiOrg: ${{ parameters.publishToPypiOrg }}
 
   - ${{ if eq( parameters.buildType, 'SERIVCE')}}:
-      - 
+    
     - template: publish_service.yml
       parameters:
         language: ${{ parameters.language }}
