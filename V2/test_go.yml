@@ -9,7 +9,6 @@ steps:
       mkdir ./zdevelop/tests/_reports
       python3 ./zdevelop/make_scripts/make_test.py
     displayName: 'Run Tests'
-    failOnStderr: true
 
   - script: |
       cat ./zdevelop/tests/_reports/test_full.txt \
