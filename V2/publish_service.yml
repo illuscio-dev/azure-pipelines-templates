@@ -20,10 +20,10 @@ steps:
       REGISTRY_URL: $(CONTAINER_REGISTRY_URL)
     displayName: "Logging into DockerHub"
 
-  - ${{ if eq( '${{parameters.language}}', 'PYTHON') }}:
+  - ${{ if eq( parameters.language, 'PYTHON') }}:
     - template: publish_service_build_python.yml
 
-  - ${{ if eq( '${{parameters.language}}', 'GO') }}:
+  - ${{ if eq( parameters.language, 'GO') }}:
     - template: publish_service_build_go.yml
 
   # Push docker image.
