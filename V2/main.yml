@@ -138,6 +138,10 @@ jobs:
           env:
             PublishLanguage: "GO"
 
+        - script: |
+            echo 'Version: $(RELEASE_VERSION)'
+          displayName: 'print version'
+
         # If we are in a release build and want to publish docs, do it.
         - ${{ if parameters.publishDocs }}:
           - template: doc.yml
