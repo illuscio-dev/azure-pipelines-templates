@@ -1,0 +1,16 @@
+steps:
+  # Build docker image, tag as latest and version.
+  - script: |
+      docker build \
+      --no-cache \
+      --build-arg PIP_INDEX_URL=$PIP_INDEX_URL \
+      --build-arg PIP_EXTRA_INDEX_URL=$PIP_EXTRA_INDEX_URL \
+      -t $REGISTRY_NAME/$SERVICE_NAME:$RELEASE_VERSION \
+      -t $REGISTRY_NAME/$SERVICE_NAME:latest .
+    env:
+      RELEASE_VERSION: $(RELEASE_VERSION)
+      REGISTRY_NAME: $(CONTAINER_REGISTRY_NAME)
+      PIP_INDEX_URL: $(PIP_INDEX_URL)
+      PIP_EXTRA_INDEX_URL: $(PIP_EXTRA_INDEX_URL)
+      DOCKER_BUILDKIT: 1
+    displayName: 'Building Docker Image'

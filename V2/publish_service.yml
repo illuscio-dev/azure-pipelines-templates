@@ -1,0 +1,33 @@
+parameters:
+  # What the primary language of this build is. Choices are GO | PYTHON | DOCKER.
+  - name: language
+    type: string
+
+steps:
+
+  # Set service name as build variable.
+  - script: $(python3 $(BUILD_SCRIPTS_DIR)/python_export_service_name.py)
+    displayName: Get Service Name
+
+  - script: docker -v
+    displayName: Printing docker version info
+
+  # Log in to docker.
+  - script: docker login $REGISTRY_URL -u $DOCKER_ID -p $DOCKER_PASSWORD
+    env:
+      DOCKER_ID: $(CONTAINER_REGISTRY_ID)
+      DOCKER_PASSWORD: $(CONTAINER_REGISTRY_PASSWORD)
+      REGISTRY_URL: $(CONTAINER_REGISTRY_URL)
+    displayName: "Logging into DockerHub"
+
+  - ${{ if eq( '${{parameters.language}}', 'PYTHON') }}:
+    - template: publish_service_build_python.yml
+
+  - ${{ if eq( '${{parameters.language}}', 'GO') }}:
+    - template: publish_service_build_go.yml
+
+  # Push docker image.
+  - script: docker push $REGISTRY_NAME/$SERVICE_NAME
+    displayName: 'Upload Image'
+    env:
+      REGISTRY_NAME: $(CONTAINER_REGISTRY_NAME)

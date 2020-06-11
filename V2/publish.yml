@@ -30,3 +30,9 @@ steps:
         language: ${{ parameters.language }}
         pypiAzureArtifactFeed: ${{ parameters.pypiAzureArtifactFeed }}
         publishToPypiOrg: ${{ parameters.publishToPypiOrg }}
+
+  - ${{ if eq( '${{paramters.buildType}}', 'SERIVCE')}}:
+
+      - template: publish_service.yml
+        parameters:
+          language: ${{ parameters.language }}
