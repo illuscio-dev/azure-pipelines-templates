@@ -23,7 +23,7 @@ parameters:
 steps:
 
   # Publish libraries
-  - ${{ if eq( '${{paramters.buildType}}', 'LIBRARY') }}:
+  - ${{ if eq( '${{parameters.buildType}}', 'LIBRARY') }}:
 
     - template: publish_library.yml
       parameters:
@@ -31,7 +31,7 @@ steps:
         pypiAzureArtifactFeed: ${{ parameters.pypiAzureArtifactFeed }}
         publishToPypiOrg: ${{ parameters.publishToPypiOrg }}
 
-  - ${{ if eq( '${{paramters.buildType}}', 'SERIVCE')}}:
+  - ${{ if eq( '${{parameters.buildType}}', 'SERIVCE')}}:
 
       - template: publish_service.yml
         parameters:
