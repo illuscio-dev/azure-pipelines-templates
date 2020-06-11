@@ -5,11 +5,13 @@ steps:
     workingDirectory: $(Agent.BuildDirectory)
 
   - script: |
-      mkdir ./reports
+      mkdir ./zdevelop/tests/_reports
       python3 ./zdevelop/make_scripts/make_test.py
     displayName: 'Run Tests'
     failOnStderr: true
 
-  - script: cat ./reports/test_full.txt | go-junit-report > ./reports/tests_junit.xml
+  - script: |
+      cat ./zdevelop/tests/_reports/test_full.txt \
+        | go-junit-report > ./reports/tests_junit.xml
     condition: succeededOrFailed()
     displayName: 'Convert test report to junit'
