@@ -22,8 +22,16 @@ parameters:
 
 steps:
 
-  # Publish libraries
-  - ${{ if eq( '${{parameters.buildType}}', 'LIBRARY') }}:
+  # Freeze the list of packages this build was made with for reference.
+  - script: pip freeze > pip-freeze.txt
+    displayName: 'Freeze python package list'
+
+  # Merge build to master and tag as release version (this is how go modules are
+  # published). We are going to do it for every type of release, so we always have a
+  # history of tags for each release.
+  - template: git_update_master_version.yml
+
+  - ${{ if eq( parameters.buildType, 'LIBRARY') }}:
 
     - template: publish_library.yml
       parameters:
@@ -31,8 +39,8 @@ steps:
         pypiAzureArtifactFeed: ${{ parameters.pypiAzureArtifactFeed }}
         publishToPypiOrg: ${{ parameters.publishToPypiOrg }}
 
-  - ${{ if eq( '${{parameters.buildType}}', 'SERIVCE')}}:
-
-      - template: publish_service.yml
-        parameters:
-          language: ${{ parameters.language }}
+  - ${{ if eq( parameters.buildType, 'SERIVCE')}}:
+      - 
+    - template: publish_service.yml
+      parameters:
+        language: ${{ parameters.language }}
