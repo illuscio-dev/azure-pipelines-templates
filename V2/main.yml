@@ -129,13 +129,14 @@ jobs:
       # Building docs and publishing only need be done on dev branch builds, which are
       # candidates for release.
       - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/dev') }}:
+        - script: pip install packaging
+          displayName: 'install version script dependencies'
 
         # Get the release version.
         - script: python3 $(BUILD_SCRIPTS_DIR)/get_release_version.py
           displayName: 'get release version'
           env:
             PublishLanguage: "GO"
-          condition: succeeded()
 
         # If we are in a release build and want to publish docs, do it.
         - ${{ if parameters.publishDocs }}:

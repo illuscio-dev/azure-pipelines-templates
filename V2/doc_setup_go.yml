@@ -1,5 +1,9 @@
 
 steps:
+  # We need to install sphinx via python
+  - template: doc_setup_python.yml
+    displayName: 'Install sphinx'
+
   # Build API documentation. We just need to build the source static html files here
   # and sphinx can use them.
   - script: |
