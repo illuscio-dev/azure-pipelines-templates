@@ -6,11 +6,10 @@ steps:
 
   - script: |
       mkdir ./reports
-      python3 ./zdevelop/make_scripts/make_test.py \
-      2>&1 \
-      | tee ./reports/testResults.txt
+      python3 ./zdevelop/make_scripts/make_test.py
     displayName: 'Run Tests'
+    failOnStderr: true
 
-  - script: cat ./reports/testResults.txt | go-junit-report > ./reports/tests_junit.xml
+  - script: cat ./reports/test_full.txt | go-junit-report > ./reports/tests_junit.xml
     condition: succeededOrFailed()
     displayName: 'Convert test report to junit'
