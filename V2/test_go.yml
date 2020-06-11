@@ -5,6 +5,7 @@ steps:
     workingDirectory: $(Agent.BuildDirectory)
 
   - script: |
+      mkdir ./zdevelop/tests
       mkdir ./zdevelop/tests/_reports
       python3 ./zdevelop/make_scripts/make_test.py
     displayName: 'Run Tests'
