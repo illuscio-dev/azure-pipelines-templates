@@ -1,0 +1,34 @@
+parameters:
+  # What the primary language of this build is. Choices are GO | PYTHON | DOCKER.
+  - name: language
+    type: string
+
+  # Artifact feed to pull custom packages from (pass blank if not using).
+  - name: pypiAzureArtifactFeed
+    type: string
+
+  # Publish to the public pypi.org
+  - name: publishToPypiOrg
+    type: boolean
+
+steps:
+  # Setup build tools / dependencies. We run this first so additional python packages
+  # are not excluded from the pip freeze.
+  - ${{ if eq( '${{parameters.language}}', 'PYTHON') }}:
+      - template: publish_setup_python_library.yml
+
+  # Freeze the list of packages this build was made with for reference.
+  - script: pip freeze > pip-freeze.txt
+    displayName: 'Freeze python package list'
+
+  # Merge build to master and tag as release version (this is how go modules are
+  # published). We are going to do it for every type of release, so we always have a
+  # history of tags for each release.
+  - template: git_update_master_version.yml
+
+  # If this is a python library we need to release to pypi
+  - ${{ if eq( '${{parameters.language}}', 'PYTHON') }}:
+      - template: publish_python_library.yml
+        parameters:
+          pypiAzureArtifactFeed: ${{ parameters.pypiAzureArtifactFeed }}
+          publishToPypiOrg: ${{ parameters.publishToPypiOrg }}
