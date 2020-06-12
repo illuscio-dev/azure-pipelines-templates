@@ -15,7 +15,3 @@ steps:
     git config --global user.email "$(GIT_EMAIL)"
     git config --global user.name "$(GIT_USERNAME)"
   displayName: 'Setting up git config.'
-
-# Pull any submodules for the current repo
-- script: git submodule update --checkout --recursive
-  displayName: 'Pull submodules.'

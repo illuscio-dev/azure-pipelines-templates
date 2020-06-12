@@ -92,6 +92,10 @@ jobs:
       # Setup git environment.
       - template: setup_git.yml
 
+      # Checkout submodules
+      - checkout: self
+        submodules: true
+
       # Download python helper scripts
       - template: scripts_download.yml
 
