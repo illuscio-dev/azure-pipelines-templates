@@ -1,0 +1,15 @@
+steps:
+  # install protoc
+  - script: |
+      PROTOC_ZIP=protoc-3.7.1-linux-x86_64.zip
+      curl -OL https://github.com/protocolbuffers/protobuf/releases/download/v3.7.1/$PROTOC_ZIP
+      sudo unzip -o $PROTOC_ZIP -d /usr/local bin/protoc
+      sudo unzip -o $PROTOC_ZIP -d /usr/local 'include/*'
+      rm -f $PROTOC_ZIP
+    displayName: install protoc for docgen
+
+  - script: go install "github.com/pseudomuto/protoc-gen-doc/cmd/protoc-gen-doc"
+    displayName: install protoc static html doc generator
+
+  - script: python3 $(BUILD_SCRIPTS_DIR)/doc_generate_proto_static.py
+    displayName: Generate gRPC API docs

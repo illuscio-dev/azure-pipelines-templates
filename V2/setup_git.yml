@@ -17,5 +17,6 @@ steps:
     git config --global user.name "$(GIT_USERNAME)"
   displayName: 'Setting up git config.'
 
+# Pull any submodules for the current repo
 - script: git pull --recurse-submodules
   displayName: 'Pull submodules.'
