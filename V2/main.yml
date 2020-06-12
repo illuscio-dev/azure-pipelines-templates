@@ -74,11 +74,6 @@ parameters:
     type: boolean
     default: false
 
-  # Whether to build and publish a docker container.
-  - name: publishContainer
-    type: boolean
-    default: false
-
 jobs:
 
   - job: 'Test_Lint_Build'
@@ -162,4 +157,3 @@ jobs:
             buildType: ${{ parameters.buildType }}
             pypiAzureArtifactFeed: ${{ parameters.pypiAzureArtifactFeed }}
             publishToPypiOrg: ${{ parameters.publishToPypiOrg }}
-            publishContainer: ${{ parameters.publishContainer }}

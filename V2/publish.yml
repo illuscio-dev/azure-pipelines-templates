@@ -16,10 +16,6 @@ parameters:
   - name: publishToPypiOrg
     type: boolean
 
-  # Whether to build and publish a docker container.
-  - name: publishContainer
-    type: boolean
-
 steps:
 
   # Freeze the list of packages this build was made with for reference.
