@@ -16,10 +16,10 @@ steps:
   - ${{ if ne(parameters.pypiAzureArtifactFeed, '-') }}:
     # Set up twine
     - task: TwineAuthenticate@1
-        displayName: 'Authenticate Twine'
-        inputs:
-          # In this case, name of the feed is 'myTestFeed'
-          artifactFeed: ${{ parameters.pypiAzureArtifactFeed }}
+      displayName: 'Authenticate Twine'
+      inputs:
+        # In this case, name of the feed is 'myTestFeed'
+        artifactFeed: ${{ parameters.pypiAzureArtifactFeed }}
 
     - script: |
         twine upload \
