@@ -18,5 +18,5 @@ steps:
   displayName: 'Setting up git config.'
 
 # Pull any submodules for the current repo
-- script: git pull --recurse-submodules
+- script: git submodule update --checkout --recursive
   displayName: 'Pull submodules.'
