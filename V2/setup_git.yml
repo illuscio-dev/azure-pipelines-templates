@@ -9,9 +9,13 @@ steps:
     sshPassphrase: $(GIT_SSH_PASSPHRASE)
     sshKeySecureFile: git_ssh_key.private
 
-# Use SSH in place of http requests with CI/CD user
+# Use SSH in place of http requests with CI/CD user.
 - script: |
     git config --global --add url."ssh://git@github.com/".insteadOf "https://github.com/"
+    git config --global --add url."ssh://git@github.com/".insteadOf "ssh://git@github-illuscio"
     git config --global user.email "$(GIT_EMAIL)"
     git config --global user.name "$(GIT_USERNAME)"
   displayName: 'Setting up git config.'
+
+- script: git pull --recurse-submodules
+  displayName: 'Pull submodules.'
