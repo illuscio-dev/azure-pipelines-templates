@@ -15,7 +15,7 @@ parameters:
     type: boolean
 
 steps:
-  - ${{ parameters.language }}:
+  - ${{ parameters.docProtoc }}:
     - template: doc_generate_proto_static.yml
 
   - ${{ if eq(parameters.language, 'GO') }}:
