@@ -12,7 +12,6 @@ steps:
 # Use SSH in place of http requests with CI/CD user.
 - script: |
     git config --global --add url."ssh://git@github.com/".insteadOf "https://github.com/"
-    git config --global --add url."ssh://git@github.com/".insteadOf "ssh://git@github-illuscio"
     git config --global user.email "$(GIT_EMAIL)"
     git config --global user.name "$(GIT_USERNAME)"
   displayName: 'Setting up git config.'
