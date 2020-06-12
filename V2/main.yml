@@ -102,10 +102,11 @@ jobs:
 
       # Setup go environment. We need this for building protoc docs, so we'll just do it
       # for every build (for the time being).
-      - template: setup_go.yml
-        parameters:
-          language: ${{ parameters.language }}
-          goVersion: ${{ parameters.goVersion }}
+      ${{ if or( parameters.docProtoc, eq( parameters.language, 'GO' )) }}:
+        - template: setup_go.yml
+          parameters:
+            language: ${{ parameters.language }}
+            goVersion: ${{ parameters.goVersion }}
 
       # Get Repo Name.
       - script: python3 $(BUILD_SCRIPTS_DIR)/get_repo_name.py
