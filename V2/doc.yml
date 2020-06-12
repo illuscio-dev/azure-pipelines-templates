@@ -21,6 +21,9 @@ steps:
   - ${{ if eq(parameters.language, 'GO') }}:
     - template: doc_setup_go.yml
 
+  - ${{ if eq(parameters.language, 'PYTHON') }}:
+      - template: doc_setup_python.yml
+
   # Build Documentation With Sphinx
   - script: python setup.py build_sphinx -E
     displayName: 'Build docs'
