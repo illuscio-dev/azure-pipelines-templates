@@ -2,7 +2,7 @@ parameters:
 
   - name: pythonVersion
     type: string
-    default: 3.8.2
+    default: 3.8
 
   # Artifact feed to pull custom packages from
   - name: pypiAzureArtifactFeed
