@@ -13,7 +13,7 @@ steps:
       DOCKER_BUILDKIT=1 docker build \
       --no-cache \
       --build-arg GOPRIVATE=$GOPRIVATE \
-      --secret id=git_key,src=$(gitSSHKey.secureFilePath) \
+      --secret id=git_key,src=$SSH_KEY_PATH \
       -t $REGISTRY_NAME/$SERVICE_NAME:$RELEASE_VERSION \
       -t $REGISTRY_NAME/$SERVICE_NAME:latest \
       .
@@ -21,5 +21,6 @@ steps:
       RELEASE_VERSION: $(RELEASE_VERSION)
       REGISTRY_NAME: $(CONTAINER_REGISTRY_NAME)
       GOPRIVATE: $(GOPRIVATE)
+      SSH_KEY_PATH: $(gitSSHKey.secureFilePath)
       DOCKER_BUILDKIT: 1
     displayName: 'Building Docker Image'
