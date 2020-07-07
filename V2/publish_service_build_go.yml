@@ -2,7 +2,7 @@ steps:
   # Vendor all dependencies so we can tranfer them to the container with a copy in
   # case of GOPRIVATE repos.
   - script: go mod vendor
-    displayName: download all dependencies in vendor mode
+    displayName: vendor dependencies
 
   # Build docker image, tag as latest and version.
   - script: |
