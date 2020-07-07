@@ -5,9 +5,12 @@ steps:
     inputs:
       secureFile: git_ssh_key.private
 
+  - script: echo $(gitSSHKey.secureFilePath)
+    name: debug ssh key location
+
   # Build docker image, tag as latest and version.
   - script: |
-      docker build \
+      DOCKER_BUILDKIT=1 docker build \
       --no-cache \
       --build-arg GOPRIVATE=$GOPRIVATE \
       --secret id=git_key,src=$(gitSSHKey.secureFilePath) \
