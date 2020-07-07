@@ -26,6 +26,9 @@ steps:
 - script: go env
   displayName: 'Print go env'
 
+- script: echo $(GOPRIVATE)
+  displayName: 'Print GOPRIVATE'
+
 - ${{if eq(parameters.language, 'GO')}}:
   - script: go get -v -t -d ./...
     displayName: 'Go get dependencies'
