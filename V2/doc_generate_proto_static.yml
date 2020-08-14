@@ -8,6 +8,9 @@ steps:
       rm -f $PROTOC_ZIP
     displayName: install protoc for docgen
 
+  - script: go get "github.com/pseudomuto/protoc-gen-doc/cmd/protoc-gen-doc"
+    displayName: fetch protoc static html doc generator
+
   - script: go install "github.com/pseudomuto/protoc-gen-doc/cmd/protoc-gen-doc"
     displayName: install protoc static html doc generator
 
