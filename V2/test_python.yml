@@ -3,7 +3,7 @@ steps:
     displayName: 'Install python test dependencies'
 
   - script: |
-      pytest --doctest-modules --junitxml=junit/test-results.xml
+      pytest --doctest-modules --junitxml=reports/tests_junit.xml
     displayName: 'pytest'
 
   - task: PythonScript@0

@@ -1,22 +1,18 @@
 steps:
-  - task: DownloadSecureFile@1
-    name: gitSSHKey
-    displayName: 'Download git ssh key'
-    inputs:
-      secureFile: git_ssh_key.private
+  # Vendor all dependencies so we can tranfer them to the container with a copy in
+  # case of GOPRIVATE repos.
+  - script: go mod vendor
+    displayName: vendor dependencies
 
   # Build docker image, tag as latest and version.
   - script: |
       docker build \
       --no-cache \
-      --build-arg GOPRIVATE=$GOPRIVATE \
-      --secret id=git_key,src=$(gitSSHKey.secureFilePath) \
       -t $REGISTRY_NAME/$SERVICE_NAME:$RELEASE_VERSION \
       -t $REGISTRY_NAME/$SERVICE_NAME:latest \
       .
     env:
       RELEASE_VERSION: $(RELEASE_VERSION)
       REGISTRY_NAME: $(CONTAINER_REGISTRY_NAME)
-      GOPRIVATE: $(GOPRIVATE)
       DOCKER_BUILDKIT: 1
     displayName: 'Building Docker Image'

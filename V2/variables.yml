@@ -3,7 +3,7 @@ variables:
   GOBIN: '/opt/hostedtoolcache/go/bin'
 
   # Link to org where private gomods are stored
-  GOPRIVATE: github.com/illuscio-dev
+  GOPRIVATE: https://github.com/illuscio-dev,github.com/illuscio-dev
 
   # YOUR PRIVATE REPO GOES HERE LEAVE BLANK TO NOT USE.
   PIP_INDEX_URL:
