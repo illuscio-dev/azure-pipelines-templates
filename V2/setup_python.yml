@@ -43,3 +43,6 @@ steps:
   - ${{ if parameters.installLocalPackage }}:
     - script: pip install --no-cache-dir -e .
       displayName: 'Install python dependencies'
+
+  - script: pip uninstall -y typing
+    displayName: 'Uninstall third-party typing'

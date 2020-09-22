@@ -1,6 +1,3 @@
 steps:
   - script: pip install --no-cache-dir -e .[doc]
     displayName: 'Install python doc dependencies'
-
-  - script: pip uninstall -y typing
-    displayName: 'uninstall third-party typing'
