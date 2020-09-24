@@ -20,7 +20,7 @@ steps:
   - script: docker pull 'mongo:4.2'
     displayName: 'downloading mongodb docker'
 
-  - script: docker run -d --name mongotest -p 127.0.0.1:57017:27017/tcp mongo:4.2
+  - script: docker run -d --name mongotest -p 127.0.0.1:57017:27017/tcp mongo
     displayName: 'start test mongo server'
 
 # RABBIT MQ
