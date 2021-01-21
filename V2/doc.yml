@@ -15,14 +15,16 @@ parameters:
     type: boolean
 
 steps:
-  - ${{ if parameters.docProtoc }}:
-    - template: doc_generate_proto_static.yml
-
   - ${{ if eq(parameters.language, 'GO') }}:
     - template: doc_setup_go.yml
 
   - ${{ if eq(parameters.language, 'PYTHON') }}:
       - template: doc_setup_python.yml
+
+  # Generate protoc docs. We do this after the Go docs so the go static documentation
+  # does not overwrite our proto.html output
+  - ${{ if parameters.docProtoc }}:
+      - template: doc_generate_proto_static.yml
 
   # Build Documentation With Sphinx
   - script: python setup.py build_sphinx -E
