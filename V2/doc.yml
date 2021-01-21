@@ -31,7 +31,3 @@ steps:
 
   # Set up docs for github pages publishing.
   - template: doc_publish_github_pages.yml
-
-  # Release docs on aws.
-  - ${{ if parameters.publishDocsS3 }}:
-    - template: doc_publish_to_s3.yml
