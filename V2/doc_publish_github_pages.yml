@@ -1,5 +1,6 @@
 steps:
 
+# Copy docs to /docs folder for github pages.
 - task: CopyFiles@2
   inputs:
     sourceFolder: $(Build.SourcesDirectory)/zdocs/build/html
@@ -13,8 +14,8 @@ steps:
   condition: succeeded()
 
 
-# Copy docs to /docs folder for github pages. We need to add a .nojekyll file to tell
-# github pages not to run a build, since we are building it now.
+# We need to add a .nojekyll file to tell github pages not to run a build,
+# since we are building it now.
 - script: |
     echo > "./docs/.nojekyll"
   displayName: 'Create .nojekyll file'
