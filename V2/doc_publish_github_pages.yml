@@ -20,3 +20,7 @@ steps:
     echo > "./docs/.nojekyll"
   displayName: 'Create .nojekyll file'
   condition: succeeded()
+
+# List files in docs directory for debugging
+- script: ls ./zdocs/source/_static
+  displayName: list docs files
