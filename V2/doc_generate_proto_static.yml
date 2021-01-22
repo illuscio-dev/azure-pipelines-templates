@@ -15,7 +15,7 @@ steps:
   - script: go install "github.com/pseudomuto/protoc-gen-doc/cmd/protoc-gen-doc"
     displayName: install protoc static html doc generator
 
-  - script: python3 $(BUILD_SCRIPTS_DIR)/doc_generate_proto_static.py
+  - script: python3 ./zdevelop/make_scripts/proto_docs.py
     displayName: Generate gRPC API docs
 
   # List files in docs directory for debugging
