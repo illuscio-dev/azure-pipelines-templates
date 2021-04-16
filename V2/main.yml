@@ -27,7 +27,7 @@ parameters:
   # Link to go compiler to use.
   - name: goVersion
     type: string
-    default: 1.16
+    default: 1.16.3
 
   # Whether to run tests
   - name: runTests
