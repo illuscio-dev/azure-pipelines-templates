@@ -14,6 +14,8 @@ parameters:
 steps:
   - ${{ if eq(parameters.language, 'GO') }}:
     - template: doc_setup_go.yml
+      parameters:
+        docGodoc: ${{ parameters.docGodoc }}
 
   - ${{ if eq(parameters.language, 'PYTHON') }}:
       - template: doc_setup_python.yml
