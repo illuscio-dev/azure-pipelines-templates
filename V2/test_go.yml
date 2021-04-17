@@ -20,8 +20,8 @@ steps:
     displayName: 'Convert test report to junit'
 
   - script: |
-      gocov convert coverage.txt > ./reports/coverage.json
-      gocov-xml < coverage.json > ./reports/coverage.xml
+      gocov convert ./reports/coverage.txt > ./reports/coverage.json
+      gocov-xml < ./reports/coverage.json > ./reports/coverage.xml
     condition: succeededOrFailed()
     displayName: 'Convert coverage report to junit'
 
