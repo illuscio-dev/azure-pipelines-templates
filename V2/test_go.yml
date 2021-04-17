@@ -1,7 +1,7 @@
 steps:
   - script: |
-      go install github.com/jstemmer/go-junit-report
-      go install github.com/AlekSi/gocov-xml
+      go install github.com/jstemmer/go-junit-report@latest
+      go install github.com/AlekSi/gocov-xml@latest
     displayName: 'Go install test tools'
     workingDirectory: $(Agent.BuildDirectory)
 
