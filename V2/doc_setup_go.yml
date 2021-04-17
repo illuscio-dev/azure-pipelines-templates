@@ -1,15 +1,21 @@
+parameters:
+  # Whether to create static go API docs.
+  - name: docGodoc
+    type: boolean
 
 steps:
   # We need to install sphinx via python
   - template: doc_setup_python.yml
 
-  # Build API documentation. We just need to build the source static html files here
-  # and sphinx can use them.
-  - script: |
-      go get -u github.com/illuscio-dev/docmodule-go
-      go get -u golang.org/x/tools/cmd/godoc
-    displayName: 'Go get doc tools'
-    workingDirectory: $(Agent.BuildDirectory)
+  - ${{ if parameters.docGodoc }}:
+      -
+    # Build API documentation. We just need to build the source static html files here
+    # and sphinx can use them.
+    - script: |
+        go get -u github.com/illuscio-dev/docmodule-go
+        go get -u golang.org/x/tools/cmd/godoc
+      displayName: 'Go get doc tools'
+      workingDirectory: $(Agent.BuildDirectory)
 
-  - script: docmodule-go
-    displayName: 'Generate static API docs'
+    - script: docmodule-go
+      displayName: 'Generate static API docs'

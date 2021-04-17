@@ -59,15 +59,9 @@ parameters:
     type: boolean
     default: false
 
-  # Whether to generate REST API docs with Redoc.
-  - name: docRedoc
+  # Whether to create static go API docs.
+  - name: docGodoc
     type: boolean
-    default: false
-
-  # Whether to publish docs to S3.
-  - name: publishDocsS3
-    type: boolean
-    default: false
 
   # Whether to publish python package to pypi.org.
   - name: publishToPypiOrg
@@ -148,9 +142,8 @@ jobs:
             parameters:
               language: ${{ parameters.language }}
               docProtoc: ${{ parameters.docProtoc }}
-              docRedoc: ${{ parameters.docRedoc }}
-              publishDocsS3: ${{ parameters.publishDocsS3 }}
-
+              docGodoc: ${{ parameters.docGodoc }}
+              
         # If we are building the dev branch, we want to publish.
         - template: publish.yml
           parameters:

@@ -7,11 +7,8 @@ parameters:
   - name: docProtoc
     type: boolean
 
-  # Whether to generate REST API docs with Redoc.
-  - name: docRedoc
-    type: boolean
-
-  - name: publishDocsS3
+  # Whether to create static go API docs.
+  - name: docGodoc
     type: boolean
 
 steps:
