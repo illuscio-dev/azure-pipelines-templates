@@ -1,7 +1,8 @@
 steps:
   - script: |
-      go get -u github.com/jstemmer/go-junit-report
-    displayName: 'Go get test tools'
+      go install github.com/jstemmer/go-junit-report
+      go install github.com/AlekSi/gocov-xml
+    displayName: 'Go install test tools'
     workingDirectory: $(Agent.BuildDirectory)
 
   - script: |
@@ -16,3 +17,17 @@ steps:
         | go-junit-report > ./reports/tests_junit.xml
     condition: succeededOrFailed()
     displayName: 'Convert test report to junit'
+
+  - script: |
+      gocov convert coverage.txt > ./reports/coverage.json
+      gocov-xml < coverage.json > ./reports/coverage.xml
+    condition: succeededOrFailed()
+    displayName: 'Convert coverage report to junit'
+
+
+  - task: PublishCodeCoverageResults@1
+    inputs:
+      codeCoverageTool: Cobertura
+      summaryFileLocation: $(System.DefaultWorkingDirectory)/**/coverage.xml
+      reportDirectory:  $(System.DefaultWorkingDirectory)/**/coverage
+    displayName: 'Upload coverage report'
