@@ -8,7 +8,6 @@ steps:
   - template: doc_setup_python.yml
 
   - ${{ if parameters.docGodoc }}:
-      -
     # Build API documentation. We just need to build the source static html files here
     # and sphinx can use them.
     - script: |
