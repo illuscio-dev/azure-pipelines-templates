@@ -6,7 +6,17 @@ steps:
     workingDirectory: $(Agent.BuildDirectory)
 
   # Lint go using revive
-  - script: |
-      revive -config revive.toml ./...
-      go vet ./...
-    displayName: 'Lint'
+  - script: revive -config revive.toml ./...
+    displayName: 'Revive'
+
+  # Lint go using go vet
+  - script: go vet ./...
+    displayName: 'Go Vet'
+
+  # Lint go using golint
+  - script: golint ./...
+    displayName: 'Golint'
+
+  # Lint for misspelling
+  - script: find . -type f | grep -v zdevelop/ | grep -v zdocs/build/ | xargs misspell -error
+    displayName: 'Check misspellings'
