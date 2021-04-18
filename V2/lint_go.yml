@@ -1,9 +1,9 @@
 steps:
   # Fetch and build revive for linting
   - script: |
-      go install github.com/mgechev/revive
-      go install golang.org/x/lint/golint
-      go install github.com/client9/misspell/cmd/misspell
+      go install github.com/mgechev/revive@latest
+      go install golang.org/x/lint/golint@latest
+      go install github.com/client9/misspell/cmd/misspell@latest
     displayName: 'Go get lint tools'
     workingDirectory: $(Agent.BuildDirectory)
 
