@@ -67,7 +67,7 @@ parameters:
   # The branch to push passing 'dev' builds into.
   - name: releaseBranchName
     type: string
-    default: main
+    default: "main"
 
   # Whether to publish python package to pypi.org.
   - name: publishToPypiOrg
