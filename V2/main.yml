@@ -69,6 +69,11 @@ parameters:
     type: boolean
     default: false
 
+  # The branch to push passing builds merged into 'dev'.
+  - name: releaseBranchName
+    type: string
+    default: main
+
 jobs:
 
   - job: 'Test_Lint_Build'
