@@ -31,7 +31,7 @@ steps:
   # always have a history of tags for each release.
   - template: git_update_release_version.yml
     parameters:
-      releaseBranchName: ${{ releaseBranchName.language }}
+      releaseBranchName: ${{ parameters.releaseBranchName }}
 
   - ${{ if eq( parameters.buildType, 'LIBRARY') }}:
 

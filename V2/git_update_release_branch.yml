@@ -16,7 +16,7 @@ steps:
 # Merge into master, resolving conflicts by favoring our temp branch.
 - script: |
     git push -f origin tempBuildBranch:$(RELEASE_BRANCH)
-  displayName: 'Push Build to master'
+  displayName: 'Push Build to Release Branch'
   condition: succeeded()
   env:
     RELEASE_BRANCH: ${{ parameters.releaseBranchName }}
