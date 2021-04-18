@@ -1,3 +1,8 @@
+parameters:
+  # The branch to push passing 'dev' builds into.
+  - name: releaseBranchName
+    type: string
+
 steps:
 
 # Create a temp branch to commit our changes to.
@@ -10,13 +15,15 @@ steps:
 
 # Merge into master, resolving conflicts by favoring our temp branch.
 - script: |
-    git push -f origin tempBuildBranch:master
+    git push -f origin tempBuildBranch:$(RELEASE_BRANCH)
   displayName: 'Push Build to master'
   condition: succeeded()
+  env:
+    RELEASE_BRANCH: ${{ parameters.releaseBranchName }}
 
 # Tag with the release version as well as 'latest' and push the tag.
 - script: |
-    git checkout master
+    git checkout $(RELEASE_BRANCH)
     git pull
     git tag -d latest
     git tag -a v$(RELEASE_VERSION) -m "azure pipelines build $(Build.BuildNumber)"
@@ -25,3 +32,5 @@ steps:
     git push --tags
   displayName: 'Publish tagged version.'
   condition: succeeded()
+  env:
+    RELEASE_BRANCH: ${{ parameters.releaseBranchName }}

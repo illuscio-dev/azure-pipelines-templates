@@ -64,15 +64,15 @@ parameters:
     type: boolean
     default: false
 
+  # The branch to push passing 'dev' builds into.
+  - name: releaseBranchName
+    type: string
+    default: main
+
   # Whether to publish python package to pypi.org.
   - name: publishToPypiOrg
     type: boolean
     default: false
-
-  # The branch to push passing builds merged into 'dev'.
-  - name: releaseBranchName
-    type: string
-    default: main
 
 jobs:
 
@@ -155,5 +155,6 @@ jobs:
           parameters:
             language: ${{ parameters.language }}
             buildType: ${{ parameters.buildType }}
+            releaseBranchName: ${{ parameters.releaseBranchName }}
             pypiAzureArtifactFeed: ${{ parameters.pypiAzureArtifactFeed }}
             publishToPypiOrg: ${{ parameters.publishToPypiOrg }}
