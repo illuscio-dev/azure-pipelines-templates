@@ -14,6 +14,12 @@ steps:
   inputs:
     version: ${{ parameters.goVersion }}
 
+- script: |
+    echo '##vso[task.prependpath]$(GOBIN)'
+    echo '##vso[task.prependpath]$(GOROOT)/bin'
+  displayName: 'Register GOBIN'
+  condition: and(succeeded(), eq(variables['Agent.OS'], 'Linux'))
+
 - script: go version
   displayName: 'Print go version'
 
