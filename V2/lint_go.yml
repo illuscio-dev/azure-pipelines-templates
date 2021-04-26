@@ -20,5 +20,5 @@ steps:
     displayName: 'Golint'
 
   # Lint for misspelling
-  - script: find . -type f | grep -v zdevelop/ | grep -v zdocs/build/ | xargs misspell -error
+  - script: find . -type f -name '*.go' | xargs misspell -error
     displayName: 'Check misspellings'
