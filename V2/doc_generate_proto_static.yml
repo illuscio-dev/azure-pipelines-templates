@@ -9,10 +9,10 @@ steps:
       rm -f $PROTOC_ZIP
     displayName: install protoc for docgen
 
-  - script: go get "github.com/pseudomuto/protoc-gen-doc/cmd/protoc-gen-doc"
+  - script: go install github.com/pseudomuto/protoc-gen-doc/cmd/protoc-gen-doc@latest
     displayName: fetch protoc static html doc generator
 
-  - script: go install "github.com/pseudomuto/protoc-gen-doc/cmd/protoc-gen-doc"
+  - script: go install github.com/pseudomuto/protoc-gen-doc/cmd/protoc-gen-doc@latest
     displayName: install protoc static html doc generator
 
   - script: python3 ./zdevelop/make_scripts/proto_docs.py

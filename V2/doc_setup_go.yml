@@ -11,8 +11,8 @@ steps:
     # Build API documentation. We just need to build the source static html files here
     # and sphinx can use them.
     - script: |
-        go get -u github.com/illuscio-dev/docmodule-go
-        go get -u golang.org/x/tools/cmd/godoc
+        go install github.com/illuscio-dev/docmodule-go@latest
+        go install golang.org/x/tools/cmd/godoc@latest
       displayName: 'Go get doc tools'
       workingDirectory: $(Agent.BuildDirectory)
 
