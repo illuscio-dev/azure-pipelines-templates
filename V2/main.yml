@@ -76,7 +76,7 @@ parameters:
 
   # Whether to publish python package to pypi.org.
   - name: timeoutInMinutes
-    type: int
+    type: number
     default: 5
 
 jobs:
