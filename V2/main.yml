@@ -74,10 +74,15 @@ parameters:
     type: boolean
     default: false
 
+  # Whether to publish python package to pypi.org.
+  - name: timeoutInMinutes
+    type: int
+    default: 5
+
 jobs:
 
   - job: 'Test_Lint_Build'
-    timeoutInMinutes: 5
+    timeoutInMinutes: ${{ parameters.timeoutInMinutes }}
     cancelTimeoutInMinutes: 2
 
     pool:
